@@ -1,0 +1,1968 @@
+<html lang="ja"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eight株式会社の求人検索サービス</title>
+<style>
+  :root {
+    --bg: #0f1923;
+    --bg2: #1a2535;
+    --bg3: #1e2d40;
+    --accent: #4fc3f7;
+    --accent2: #00b4d8;
+    --green: #22c55e;
+    --teal: #06b6d4;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --border: #2d3f55;
+    --card: #1a2535;
+    --card-hover: #1e3148;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', 'Yu Gothic', sans-serif; min-height: 100vh; }
+
+  /* Header */
+  .header { text-align: center; padding: 2rem 1rem 1.5rem; background: linear-gradient(180deg, #0a1420 0%, var(--bg) 100%); }
+  .header h1 { font-size: 2rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; }
+  .header .subtitle { color: var(--text2); margin-top: 0.4rem; font-size: 0.9rem; }
+  .header .update-time { color: var(--text2); font-size: 0.78rem; margin-top: 0.2rem; }
+
+  /* Notice */
+  .notice-box { max-width: 900px; margin: 1rem auto; padding: 0 1rem; }
+  .notice-inner { background: #0f2744; border: 1px solid #1e4a7a; border-left: 4px solid var(--accent); border-radius: 8px; padding: 0.9rem 1rem; display: flex; align-items: flex-start; gap: 0.7rem; position: relative; }
+  .notice-icon { color: var(--accent); font-size: 1.1rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .notice-text { font-size: 0.85rem; line-height: 1.6; color: var(--text); flex: 1; }
+  .notice-text[contenteditable="true"] { outline: 2px dashed var(--accent); border-radius: 4px; padding: 2px 4px; }
+  .btn-edit-notice { position: absolute; top: 0.6rem; right: 0.6rem; background: #2d3f55; border: none; color: var(--text2); padding: 0.25rem 0.6rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; }
+  .btn-edit-notice:hover { background: var(--border); color: var(--text); }
+
+  /* Search Panel */
+  .search-panel { max-width: 900px; margin: 0.8rem auto; padding: 0 1rem; }
+  .search-inner { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; }
+  .search-row1 { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .search-keyword { flex: 1; min-width: 160px; background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 0.55rem 0.8rem; border-radius: 7px; font-size: 0.88rem; }
+  .search-keyword::placeholder { color: var(--text2); }
+  .search-keyword:focus { outline: none; border-color: var(--accent2); }
+  select.filter { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 0.55rem 0.7rem; border-radius: 7px; font-size: 0.85rem; cursor: pointer; }
+  select.filter:focus { outline: none; border-color: var(--accent2); }
+  .btn-search { background: var(--accent2); border: none; color: #fff; padding: 0.55rem 1.2rem; border-radius: 7px; font-size: 0.88rem; cursor: pointer; font-weight: 600; white-space: nowrap; }
+  .btn-search:hover { background: #0096c7; }
+  .search-row2 { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; align-items: center; }
+  select.sort { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 0.45rem 0.6rem; border-radius: 7px; font-size: 0.82rem; cursor: pointer; }
+  .btn-fav { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 0.45rem 0.8rem; border-radius: 7px; font-size: 0.82rem; cursor: pointer; }
+  .btn-fav:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-fav.active { background: #3d2d00; border-color: var(--orange); color: var(--orange); }
+  .btn-gdrive { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 0.45rem 0.8rem; border-radius: 7px; font-size: 0.82rem; cursor: pointer; }
+  .btn-gdrive:hover { border-color: #4285f4; color: #4285f4; }
+  .btn-load-file { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 0.45rem 0.8rem; border-radius: 7px; font-size: 0.82rem; cursor: pointer; }
+  .btn-load-file:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-clear { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 0.45rem 0.8rem; border-radius: 7px; font-size: 0.82rem; cursor: pointer; }
+  .btn-clear:hover { border-color: var(--red); color: var(--red); }
+  .btn-export { background: #145a32; border: 1px solid #1e8449; color: #6ee7b7; padding: 0.45rem 0.9rem; border-radius: 7px; font-size: 0.82rem; cursor: pointer; font-weight: 600; }
+  .btn-export:hover { background: #1e8449; color: #fff; }
+  #file-input { display: none; }
+
+  /* Result count */
+  .result-count { max-width: 900px; margin: 0.8rem auto 0.5rem; padding: 0 1rem; }
+  .result-count span { color: var(--accent); font-size: 1.3rem; font-weight: 700; }
+  .result-count em { color: var(--text2); font-size: 0.9rem; font-style: normal; }
+
+  /* Job Grid */
+  .job-grid { max-width: 900px; margin: 0 auto; padding: 0 1rem 3rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; }
+  .job-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; cursor: pointer; transition: background 0.15s, border-color 0.15s; position: relative; }
+  .job-card:hover { background: var(--card-hover); border-color: #3d5a7a; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; align-items: center; }
+  .tag { font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 600; }
+  .tag-type-full { background: #1a3a5c; color: #7ec8f7; border: 1px solid #2a5580; }
+  .tag-type-part { background: #1c3d2a; color: #6ee7b7; border: 1px solid #2a6040; }
+  .tag-general { background: #1a2f1a; color: #86efac; border: 1px solid #2a5030; }
+  .tag-disabled { background: #3d1c1c; color: #fca5a5; border: 1px solid #6b2a2a; }
+  .tag-new { background: var(--green); color: #fff; }
+  .tag-real { background: transparent; color: #94a3b8; border: 1px solid #3d5a7a; font-size: 0.68rem; }
+  .tag-remote { background: #1a3d2a; color: #6ee7b7; border: 1px solid #2a6040; }
+  .fav-btn { position: absolute; top: 0.7rem; right: 0.7rem; background: none; border: none; cursor: pointer; font-size: 1.1rem; color: #3d5a7a; }
+  .fav-btn.active { color: var(--orange); }
+  .card-title { font-size: 0.95rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.5rem; color: var(--text); padding-right: 1.5rem; }
+  .card-company { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.5rem; }
+  .card-location { font-size: 0.78rem; color: var(--text2); }
+  .card-location::before { content: '📍 '; }
+  .card-salary { font-size: 0.85rem; color: #4fc3f7; font-weight: 600; margin-top: 0.3rem; }
+  .card-salary::before { content: '¥ '; }
+  .card-worktime { font-size: 0.78rem; color: var(--text2); margin-top: 0.25rem; }
+  .card-worktime::before { content: '🕐 '; }
+  .card-desc { font-size: 0.78rem; color: var(--text2); margin-top: 0.5rem; line-height: 1.55; border-top: 1px solid var(--border); padding-top: 0.5rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-date { font-size: 0.72rem; color: #4a6a8a; margin-top: 0.5rem; text-align: right; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 1.5rem; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: var(--bg3); border: none; color: var(--text2); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+  .modal-close:hover { color: var(--text); }
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.8rem; }
+  .modal-title { font-size: 1.4rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.3rem; }
+  .modal-company { color: var(--accent); font-size: 0.95rem; margin-bottom: 1rem; }
+  .modal-divider { border: none; border-top: 1px solid var(--border); margin: 0.8rem 0; }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
+  .modal-info-box { background: var(--bg3); border-radius: 8px; padding: 0.6rem 0.8rem; }
+  .modal-info-label { font-size: 0.7rem; color: var(--text2); margin-bottom: 0.2rem; }
+  .modal-info-val { font-size: 0.88rem; color: var(--text); font-weight: 500; }
+  .modal-desc-box { background: var(--bg3); border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem; }
+  .modal-desc-title { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+  .modal-desc-text { font-size: 0.83rem; color: var(--text2); line-height: 1.6; white-space: pre-wrap; }
+  .btn-apply { display: block; width: 100%; background: var(--accent2); color: #fff; border: none; padding: 0.75rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 0.3rem; text-decoration: none; }
+  .btn-apply:hover { background: #0096c7; }
+  .modal-apply-note { text-align: center; font-size: 0.75rem; color: var(--text2); margin-bottom: 0.8rem; }
+  .btn-delete-job { display: block; width: 100%; background: transparent; color: var(--red); border: 1px solid var(--red); padding: 0.55rem; border-radius: 8px; font-size: 0.82rem; cursor: pointer; text-align: center; }
+  .btn-delete-job:hover { background: #3d1c1c; }
+
+  /* Confirm Modal */
+  .confirm-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+  .confirm-modal.open { display: flex; }
+  .confirm-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; max-width: 380px; width: 90%; text-align: center; }
+  .confirm-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .confirm-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .confirm-text { color: var(--text2); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.2rem; }
+  .confirm-buttons { display: flex; gap: 0.6rem; justify-content: center; }
+  .btn-cancel { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 1.4rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+  .btn-confirm-delete { background: var(--red); border: none; color: #fff; padding: 0.6rem 1.4rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #1a3a1a; border: 1px solid var(--green); color: var(--green); padding: 0.7rem 1.2rem; border-radius: 8px; font-size: 0.85rem; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text2); grid-column: 1 / -1; }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.4rem; }
+    .search-row1, .search-row2 { flex-direction: column; }
+    .modal-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>ｅｉｇｈｔ株式会社の求人検索サービス</h1>
+  <div class="subtitle">ハローワーク インターネットサービスの求人情報をスマートに閲覧</div>
+  <div class="update-time" id="update-time">AI自動更新: 2026-06-24 13:45:53</div>
+</div>
+
+<!-- Notice -->
+<div class="notice-box">
+  <div class="notice-inner">
+    <span class="notice-icon">ℹ</span>
+    <div class="notice-text" id="notice-text" contenteditable="false">
+      ※障害者雇用求人では、通勤勤務を載せています。ただ近畿だけです。また、在宅勤務の方は全国の勤務地を載せています。<br>
+      ※一般求人の方では、全国にある在宅勤務可能な求人だけを載せています。通勤が必要な求人は一般求人の方では載せておりません。
+    </div>
+    <button class="btn-edit-notice" id="btn-edit-notice" onclick="toggleNoticeEdit()">✏ 修正</button>
+  </div>
+</div>
+
+<!-- Search Panel -->
+<div class="search-panel">
+  <div class="search-inner">
+    <div class="search-row1">
+      <input type="text" class="search-keyword" id="keyword" placeholder="キーワード（職種、会社名など）">
+      <select class="filter" id="filter-location">
+        <option value="">全ての勤務地</option>
+        <optgroup label="在宅・リモート"><option value="在宅">在宅・リモート</option></optgroup>
+        <optgroup label="北海道・東北">
+          <option value="北海道">北海道</option><option value="青森県">青森県</option>
+          <option value="岩手県">岩手県</option><option value="宮城県">宮城県</option>
+          <option value="秋田県">秋田県</option><option value="山形県">山形県</option>
+          <option value="福島県">福島県</option>
+        </optgroup>
+        <optgroup label="関東">
+          <option value="茨城県">茨城県</option><option value="栃木県">栃木県</option>
+          <option value="群馬県">群馬県</option><option value="埼玉県">埼玉県</option>
+          <option value="千葉県">千葉県</option><option value="東京都">東京都</option>
+          <option value="神奈川県">神奈川県</option>
+        </optgroup>
+        <optgroup label="甲信越・北陸">
+          <option value="新潟県">新潟県</option><option value="富山県">富山県</option>
+          <option value="石川県">石川県</option><option value="福井県">福井県</option>
+          <option value="山梨県">山梨県</option><option value="長野県">長野県</option>
+        </optgroup>
+        <optgroup label="東海">
+          <option value="岐阜県">岐阜県</option><option value="静岡県">静岡県</option>
+          <option value="愛知県">愛知県</option><option value="三重県">三重県</option>
+        </optgroup>
+        <optgroup label="近畿">
+          <option value="滋賀県">滋賀県</option><option value="京都府">京都府</option>
+          <option value="大阪府">大阪府</option><option value="兵庫県">兵庫県</option>
+          <option value="奈良県">奈良県</option><option value="和歌山県">和歌山県</option>
+        </optgroup>
+        <optgroup label="中国">
+          <option value="鳥取県">鳥取県</option><option value="島根県">島根県</option>
+          <option value="岡山県">岡山県</option><option value="広島県">広島県</option>
+          <option value="山口県">山口県</option>
+        </optgroup>
+        <optgroup label="四国">
+          <option value="徳島県">徳島県</option><option value="香川県">香川県</option>
+          <option value="愛媛県">愛媛県</option><option value="高知県">高知県</option>
+        </optgroup>
+        <optgroup label="九州・沖縄">
+          <option value="福岡県">福岡県</option><option value="佐賀県">佐賀県</option>
+          <option value="長崎県">長崎県</option><option value="熊本県">熊本県</option>
+          <option value="大分県">大分県</option><option value="宮崎県">宮崎県</option>
+          <option value="鹿児島県">鹿児島県</option><option value="沖縄県">沖縄県</option>
+        </optgroup>
+      </select>
+      <select class="filter" id="filter-employment">
+        <option value="">全ての雇用枠</option>
+        <option value="一般">一般雇用枠</option>
+        <option value="障害者">障害者枠</option>
+      </select>
+      <select class="filter" id="filter-period">
+        <option value="">全ての期間</option>
+        <option value="today">今日</option>
+        <option value="3days">3日以内</option>
+        <option value="week">今週（1週間内）</option>
+      </select>
+      <button class="btn-search" onclick="applyFilters()">🔍 検索</button>
+    </div>
+    <div class="search-row2">
+      <select class="sort" id="sort-order" onchange="applyFilters()">
+        <option value="new">新着順</option>
+        <option value="old">古い順</option>
+      </select>
+      <button class="btn-fav" id="btn-fav-toggle" onclick="toggleFavFilter()">☆ お気に入り</button>
+      <button class="btn-gdrive" onclick="syncGDrive()">🔄 Googleドライブ同期</button>
+      <button class="btn-load-file" onclick="document.getElementById('file-input').click()">📂 個別にファイルを読込む</button>
+      <input type="file" id="file-input" accept=".html,.htm,text/html" multiple="" onchange="loadHTMLFiles(event)">
+      <button class="btn-export" onclick="exportHTML()">💾 データを書き出す</button>
+      <button class="btn-clear" onclick="showClearConfirm()">🗑 クリア</button>
+    </div>
+  </div>
+</div>
+
+<!-- Result count -->
+<div class="result-count">
+  <span id="result-count">71</span> <em>件の求人が見つかりました</em>
+</div>
+
+<!-- Job Grid -->
+<div class="job-grid" id="job-grid">
+    <div class="job-card" onclick="openModal('jno_1301066862961')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1301066862961')">★</button>
+      <div class="card-title">総合コンサルティング企業、助成金のコンサルティング業務</div>
+      <div class="card-company">株式会社Ｏｃｔａｇｏｎ　Ｃｏｎｓｕｌｔｉｎｇ</div>
+      <div class="card-location">東京都中央区</div>
+      <div class="card-salary">200,000円〜261,000円</div>
+      <div class="card-worktime">フレックスタイム制 （1）09時00分〜18時00分</div>
+      <div class="card-desc">総合コンサルティング企業、助成金のコンサルティング業務・各種助成金（主に人材開発支援助成金）のコンサルティング・提携社労士法人との折衝、クライアントとのコミュニケーション</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1304084453361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1304084453361')">★</button>
+      <div class="card-title">インサイドセールス</div>
+      <div class="card-company">株式会社　ダイレクト・リンク</div>
+      <div class="card-location">東京都港区</div>
+      <div class="card-salary">205,000円〜405,000円</div>
+      <div class="card-worktime">（1）08時45分〜18時00分</div>
+      <div class="card-desc">ＡＩを活用したインサイドセールス（営業職）法人向けにパソコンや、周辺機器、ソフトウェア等をご提案 電話を活用した営業スタイルです。</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1304084723861')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1304084723861')">★</button>
+      <div class="card-title">医療画像のクラウド読影サービスの事業開発・営業</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都渋谷区</div>
+      <div class="card-salary">1,500円〜4,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">１．医療機関（健診センター、クリニック、病院等）の開拓：クラウド読影サービスを導入・利用していただけるクライアント医療機関の新規開拓営業。潜在顧客（特に健診センター等）へのヒアリン</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308060400461')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308060400461')">★</button>
+      <div class="card-title">ＡＷＳデータエンジニア未経験から在宅中心で成長加速</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■ＡＷＳ上のデータ連携処理の実装補助■ＢｉｇＱｕｅｒｙとＳｎｏｗｆｌａｋｅのテーブル設計補助■運用監視ダッシュボードの更新</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1411002420461')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1411002420461')">★</button>
+      <div class="card-title">システムエンジニア★在宅勤務可（完全テレワーク可）</div>
+      <div class="card-company">株式会社はたママ</div>
+      <div class="card-location">神奈川県足柄上郡松田町</div>
+      <div class="card-salary">1,800円〜2,500円</div>
+      <div class="card-worktime">フレックスタイム制 （1）09時00分〜13時00分 （2）10時00分〜12時</div>
+      <div class="card-desc">システムエンジニアとして、社内情シス・Ｗｅｂ開発・運用保守をフルリモートで支える仕事です。時短勤務も相談ＯＫ、子育てと両立しながらキャリアを続けたい方を歓迎します。＃マザーズ</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1307041775161')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1307041775161')">★</button>
+      <div class="card-title">（障）ヘルプデスク（事務・問い合わせ対応）</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都渋谷区</div>
+      <div class="card-salary">1,230円〜1,230円</div>
+      <div class="card-worktime">（1）10時00分〜17時00分</div>
+      <div class="card-desc">完全在宅にて、部活動の未来を支える部署でのヘルプデスクのお仕事です。・データ入力（専用システム、スプレッドシートなど）</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1415011756161')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1415011756161')">★</button>
+      <div class="card-title">（障）一般事務／フルリモート勤務</div>
+      <div class="card-company">図研テック株式会社</div>
+      <div class="card-location">神奈川県横浜市港北区</div>
+      <div class="card-salary">190,000円〜250,000円</div>
+      <div class="card-worktime">（1）09時00分〜17時45分</div>
+      <div class="card-desc">管理部門における総務・採用・経営企画の各業務を担当していただきます。</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2706018849061')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2706018849061')">★</button>
+      <div class="card-title">（障）経理事務等</div>
+      <div class="card-company">有限会社　Ｍ－ｓｔｙｌｅ</div>
+      <div class="card-location">大阪府豊中市</div>
+      <div class="card-salary">1,200円〜1,200円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">経理事務や人事労務等の補助をお願いします。・伝票入力・雇用保険や社会保険の手続き など</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2804007577661')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2804007577661')">★</button>
+      <div class="card-title">（障）在宅作業と施設外軽作業（就労支援Ａ型事業）</div>
+      <div class="card-company">株式会社アドア【Ｗｏｎｄｅｒ】</div>
+      <div class="card-location">兵庫県尼崎市</div>
+      <div class="card-salary">1,250円〜1,250円</div>
+      <div class="card-worktime">（1）09時00分〜14時30分</div>
+      <div class="card-desc">週２～３回事業所へ出勤作業残り在宅での事務作業・チラシ折り ・アクセサリー作り</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2804007578261')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2804007578261')">★</button>
+      <div class="card-title">（障）在宅作業と施設外軽作業（就労支援Ａ型事業）</div>
+      <div class="card-company">株式会社アドア【Ｗｏｎｄｅｒ】</div>
+      <div class="card-location">兵庫県西宮市</div>
+      <div class="card-salary">1,250円〜1,250円</div>
+      <div class="card-worktime">（1）09時00分〜14時30分</div>
+      <div class="card-desc">週２～３回事業所へ出勤作業残り在宅での事務作業・チラシ折り ・アクセサリー作り</div>
+      <div class="card-date">📋 受付年月日：2026-06-22</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1004004866561')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1004004866561')">★</button>
+      <div class="card-title">【東京】営業職（海外営業担当）</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都千代田区</div>
+      <div class="card-salary">251,100円〜306,200円</div>
+      <div class="card-worktime">フレックスタイム制 （1）08時30分〜17時30分</div>
+      <div class="card-desc">「はやぶさ」「アメダス」等、国家案件に採用される宇宙・防衛・気象・防災の観測機器や送信機等を製造している当社にて、【海外営業】をお任せします。</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308060242461')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308060242461')">★</button>
+      <div class="card-title">営業事務【完全在宅ワーク・必要あれば出勤有】</div>
+      <div class="card-company">メディカルフィッティングサポート　株式会社</div>
+      <div class="card-location">東京都杉並区</div>
+      <div class="card-salary">1,300円〜1,500円</div>
+      <div class="card-worktime">（1）09時00分〜16時00分</div>
+      <div class="card-desc">１．インターネット上の情報をＧｏｏｇｌｅやＹａｈｏｏ！の 検索エンジンを使って、当社が必要とする情報を収集する２．集めた情報をＡＩを使って取捨選択し、エクセルシートや</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1313014888761')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1313014888761')">★</button>
+      <div class="card-title">顧客もちの印刷営業／在宅勤務</div>
+      <div class="card-company">有限会社　国宗</div>
+      <div class="card-location">東京都江戸川区</div>
+      <div class="card-salary">210,000円〜210,000円</div>
+      <div class="card-worktime">（1）10時00分〜17時00分</div>
+      <div class="card-desc">＊廃業予定の印刷会社の経営者様に対してその会社の持つ顧客を確 保する営業をしていただきます。＊営業範囲は一都三県内。</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1410005487461')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1410005487461')">★</button>
+      <div class="card-title">ＷＥＢディレクター・プロデューサー</div>
+      <div class="card-company">カズミア株式会社</div>
+      <div class="card-location">神奈川県海老名市</div>
+      <div class="card-salary">1,280円〜1,600円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">・クライアントのＷｅｂ制作、デザイン作成に関する ディレクション業務・自社運営サイトの企画・運営・制作など</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2701028975761')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2701028975761')">★</button>
+      <div class="card-title">営業／東京営業所</div>
+      <div class="card-company">サンショウシステム　株式会社</div>
+      <div class="card-location">東京都港区</div>
+      <div class="card-salary">200,000円〜270,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">自社開発のソフ販売及びプログラマー等の技術者の派遣業務。取引先に技術者を提案していただきます。</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_4702009747061')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_4702009747061')">★</button>
+      <div class="card-title">未来のネットの学校を「人」から創り上げる、人事・研修担当</div>
+      <div class="card-company">学校法人　角川ドワンゴ学園</div>
+      <div class="card-location">東京都中央区</div>
+      <div class="card-salary">250,000円〜375,000円</div>
+      <div class="card-worktime">フレックスタイム制 （1）09時30分〜18時30分</div>
+      <div class="card-desc">角川ドワンゴ学園の人事・研修領域において、教職員向けの研修担当として、以下の業務を中心にご担当いただきます。・研修運営に関わる業務（主に、研修設計、社員育成、研修講師）</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_4702009748361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_4702009748361')">★</button>
+      <div class="card-title">「人」から創り上げる、人事・研修担当※管理職候補</div>
+      <div class="card-company">学校法人　角川ドワンゴ学園</div>
+      <div class="card-location">東京都中央区</div>
+      <div class="card-salary">375,000円〜500,000円</div>
+      <div class="card-worktime">フレックスタイム制 （1）09時30分〜18時30分</div>
+      <div class="card-desc">角川ドワンゴ学園の人事領域において、採用・研修領域をお任せします。管理職候補として、採用・研修領域の戦略策定、予算管理・分析、実際の運用およびチームマネジメントを担っていただきます</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2706018742961')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2706018742961')">★</button>
+      <div class="card-title">【社会設計者】工場のムダをなくすＡＩ技術者</div>
+      <div class="card-company">スキルシステムズ　株式会社</div>
+      <div class="card-location">大阪府大阪市東淀川区</div>
+      <div class="card-salary">260,000円〜333,333円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">工場の生産工程を管理・最適化するソフトウェアの開発です。設備や生産ラインから集まるデータ（稼働状況・工程進捗・品質・在庫）を取り込み、工程の進み具合をリアルタイムに可視化。</div>
+      <div class="card-date">📋 受付年月日：2026-06-19</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308060190961')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308060190961')">★</button>
+      <div class="card-title">営業／仙台市を含む東北エリア担当／在宅勤務</div>
+      <div class="card-company">株式会社　元創</div>
+      <div class="card-location">宮城県仙台市青葉区福島県福島市青森県青森市岩手県盛岡市</div>
+      <div class="card-salary">250,000円〜350,000円</div>
+      <div class="card-worktime">（1）09時00分〜17時30分</div>
+      <div class="card-desc">火葬場の管理運営を行っている会社です。・自治体向け営業活動・火葬場業務受託後の立ち上げ支援</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1006002527361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1006002527361')">★</button>
+      <div class="card-title">幹部候補募集｜ヴィンテージ日本酒ブランドを担う営業職</div>
+      <div class="card-company">清水屋酒造　有限会社</div>
+      <div class="card-location">群馬県館林市</div>
+      <div class="card-salary">360,000円〜490,000円</div>
+      
+      <div class="card-desc">酒類の法人向け営業職です。◇首都圏を中心とした料飲店・小売店・百貨店・飲食業界向けの法人営業</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1208011657461')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1208011657461')">★</button>
+      <div class="card-title">補助金事務補佐員</div>
+      <div class="card-company">株式会社Ｐａｌｅ　Ｂｌｕｅ</div>
+      <div class="card-location">千葉県柏市</div>
+      <div class="card-salary">1,300円〜1,500円</div>
+      
+      <div class="card-desc">既存の補助金、新規で申請する補助金に関わる業務全般をお任せします。</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1307041640261')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1307041640261')">★</button>
+      <div class="card-title">バイヤー／カテゴリーマネージャー</div>
+      <div class="card-company">オフビートテクニッポン株式会社</div>
+      <div class="card-location">東京都渋谷区</div>
+      <div class="card-salary">300,000円〜600,000円</div>
+      <div class="card-worktime">（1）09時30分〜18時00分</div>
+      <div class="card-desc">○化粧品、ファッション関連商品、食品、その他カテゴリーの調達。○顧客ニーズと市場動向に基づいたカテゴリー戦略の策定と実行を</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308060150361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308060150361')">★</button>
+      <div class="card-title">評価還元が明確な在宅主体セキュリティエンジニア採用</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■ＳＯＣ監視基盤のルール改善■脆弱性診断と優先度判定■ゼロトラスト運用の定着支援</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308060163761')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308060163761')">★</button>
+      <div class="card-title">帰属意識を育む柔軟勤務セキュリティ職募集案内情報中</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■脆弱性診断の再現テスト実施■ＳＯＣ対応履歴の整理と報告■ゼロトラスト運用ルールの更新補助</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1312013101361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1312013101361')">★</button>
+      <div class="card-title">ＷＥＢマーケティング営業／在宅勤務可／年間休日１３０日</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都葛飾区</div>
+      <div class="card-salary">400,000円〜692,073円</div>
+      <div class="card-worktime">（1）09時00分〜18時30分</div>
+      <div class="card-desc">ホームページ制作、ＳＥＯ対策、ＭＥＯ対策、ＡＩ活用支援サービスの法人営業を担当していただきます。中小企業や店舗の集客・採用・売上向上に関する課題をヒアリングし、最適なＷＥＢマーケテ</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1317025802161')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1317025802161')">★</button>
+      <div class="card-title">新規開発・保守エンジニア／【在宅】</div>
+      <div class="card-company">有限会社　プレシス</div>
+      <div class="card-location">東京都三鷹市</div>
+      <div class="card-salary">250,000円〜250,000円</div>
+      <div class="card-worktime">（1）09時00分〜17時00分</div>
+      <div class="card-desc">◎業務システムＣ＃【歓迎】ＷＥＢ系開発経験、データ整理・分析 と丁寧な作業ができる方，簿記・財務会計の知識， ＥＸＣＥＬＶＢＡ ｊａｖａｓｃｒｉｐｔ，ＳＱＬ，ＸＢＲＬ（ＸＭＬ） Ｈ</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2601015980361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2601015980361')">★</button>
+      <div class="card-title">介護支援専門員（ケアマネジャー）（在宅勤務可）</div>
+      <div class="card-company">株式会社　幸輝　　　　　　　　　　　　　　　　　　　　　　　
+居宅支援事業所　華</div>
+      <div class="card-location">京都府京都市北区</div>
+      <div class="card-salary">240,000円〜265,000円</div>
+      <div class="card-worktime">フレックスタイム制 （1）09時00分〜17時00分 （2）11時00分〜13時</div>
+      <div class="card-desc">＊相談業 ＊居宅サービス計画の作成＊要介護等認定の申請代行 ＊給付管理業務</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2804007507861')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2804007507861')">★</button>
+      <div class="card-title">ＥＣ運営・ＡＩを使った業務効率化ツール開発</div>
+      <div class="card-company">株式会社　ユアサ</div>
+      <div class="card-location">兵庫県西宮市</div>
+      <div class="card-salary">207,700円〜264,600円</div>
+      <div class="card-worktime">（1）08時30分〜17時30分</div>
+      <div class="card-desc">◎自社ＥＣの運営、Ａｍａｚｏｎや楽天などのモール運営＊ＩＴ、クラウドサービス、生成ＡＩ、ＢＰＯサービスを組み合わせた業務の効率化、自動化</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2804007524961')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2804007524961')">★</button>
+      <div class="card-title">【在宅勤務】資料作成</div>
+      <div class="card-company">シャインオンケアコンサルティング</div>
+      <div class="card-location">兵庫県宝塚市</div>
+      <div class="card-salary">1,200円〜1,200円</div>
+      <div class="card-worktime">（1）10時00分〜14時00分</div>
+      <div class="card-desc">【在宅勤務限定となります】コンサルティング事業における資料作成補助、秘書業務等をしていただきます。</div>
+      <div class="card-date">📋 受付年月日：2026-06-18</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_0912001880961')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_0912001880961')">★</button>
+      <div class="card-title">不動産仲介に関する翻訳・通訳（１ｈ／日の在宅勤務）</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">栃木県那須郡那須町</div>
+      <div class="card-salary">2,500円〜2,500円</div>
+      
+      <div class="card-desc">翻訳及び通訳・外国人（英語圏）向けポータルサイトからの反響への返答・外国人（英語圏）向けポータルサイトへの掲載</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1002009553561')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1002009553561')">★</button>
+      <div class="card-title">相談支援専門員</div>
+      <div class="card-company">株式会社　ワンセルフ</div>
+      <div class="card-location">群馬県富岡市</div>
+      <div class="card-salary">250,000円〜300,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">ご利用者やご家族からの相談に寄り添い、生活上の困りごとや将来に関する不安を整理しながら、必要な福祉サービスや支援につなげる相談支援業務です。</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1209010058661')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1209010058661')">★</button>
+      <div class="card-title">ＡＩシステムの開発の営業アシスタント（在宅勤務、正社員）</div>
+      <div class="card-company">マインドバンク合同会社</div>
+      <div class="card-location">千葉県船橋市</div>
+      <div class="card-salary">300,000円〜450,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">顧客のＤＸ推進支援で最先端のＡＩ技術と周辺ソリューションを組合わせて最適なシステム構築を提案する営業のアシスタント業務になります。</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1210005645461')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1210005645461')">★</button>
+      <div class="card-title">介護職（ケアマネジャー）　＊６０歳以上の方の応募も歓迎♪</div>
+      <div class="card-company">株式会社　ライフサポートＳａｎｐｏｈ　ｅ－ｓｔｙｌｅ佐倉</div>
+      <div class="card-location">千葉県佐倉市</div>
+      <div class="card-salary">325,000円〜383,334円</div>
+      <div class="card-worktime">交替制（シフト制）</div>
+      <div class="card-desc">・利用者様のケアプラン作成 ・介護保険の更新申請業務 ・その他、関連する業務</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1306008134361')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1306008134361')">★</button>
+      <div class="card-title">【厚木・在宅】世界を変える半導体デジタル設計エンジニア</div>
+      <div class="card-company">株式会社　シーディア　東京デザインセンター</div>
+      <div class="card-location">神奈川県厚木市</div>
+      <div class="card-salary">363,500円〜610,500円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">■半導体製品（デジタル）の開発における フロントエンド、ミドルエンド、バックエンドの設計または評価 ＲＴＬ設計（論理設計）・検証／ＤＦＴ／インプリ／Ｐ＆Ｒ／</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1306008135661')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1306008135661')">★</button>
+      <div class="card-title">【田町・在宅】半導体製造装置ソフト開発／Ｃ言語／２７万円</div>
+      <div class="card-company">株式会社　シーディア　東京デザインセンター</div>
+      <div class="card-location">東京都港区</div>
+      <div class="card-salary">270,000円〜361,500円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">【モノづくりの現場を、ソフトで動かすエンジニアへ】・半導体製造装置向けソフトウェア開発・設計、評価、テスト</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1301065547861')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1301065547861')">★</button>
+      <div class="card-title">開発エンジニア（ＳＥ・ＰＧ）</div>
+      <div class="card-company">株式会社ボーダーレステクノロジー</div>
+      <div class="card-location">東京都千代田区</div>
+      <div class="card-salary">234,360円〜585,860円</div>
+      <div class="card-worktime">（1）09時30分〜18時30分</div>
+      <div class="card-desc">◎何らかの開発経験者、Ｊａｖａ、Ｃ＃、ＰＨＰ、ＣＯＢＯＬ等、 実務経験６か月以上ある方の募集です。</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1301065850461')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1301065850461')">★</button>
+      <div class="card-title">【経験者歓迎】社労士業務補助※週４日、１日５時間から可能</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都中央区</div>
+      <div class="card-salary">1,270円〜1,500円</div>
+      <div class="card-worktime">（1）09時00分〜17時00分</div>
+      <div class="card-desc">お客様の保険関係の申請データ作成や給与計算データの作成、チェックを中心に内容の確認、お客様とのやり取りを行っていただきます。</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1314008988261')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1314008988261')">★</button>
+      <div class="card-title">プログラマー／トライアル併用</div>
+      <div class="card-company">インデックスシステムコンサルタンツ株式会社</div>
+      <div class="card-location">東京都日野市</div>
+      <div class="card-salary">116,350円〜179,000円</div>
+      <div class="card-worktime">フレックスタイム制 （1）10時00分〜16時15分</div>
+      <div class="card-desc">ソフトウエアを作る仕事、すなわちプログラミングです。弊社で開発したＣＡＤ（イッツキャドマックスネオ）のカスタマイズを行います。</div>
+      <div class="card-date">📋 受付年月日：2026-06-17</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_0701008381661')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_0701008381661')">★</button>
+      <div class="card-title">インターネット応接等事務員：「在宅勤務（テレワーク）」</div>
+      <div class="card-company">公立大学法人　福島県立医科大学　乳腺外科学講座</div>
+      <div class="card-location">福島県福島市</div>
+      <div class="card-salary">1,200円〜1,200円</div>
+      
+      <div class="card-desc">９時から２１時までの間，週４時間程度研究参加者オンラインサロンでファシリテーターとしてシナリオを読んで頂きます</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1009002353561')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1009002353561')">★</button>
+      <div class="card-title">社労士業務スタッフ（テレワーク）</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">群馬県藤岡市</div>
+      <div class="card-salary">1,100円〜1,200円</div>
+      
+      <div class="card-desc">※原則、テレワークで行っていただきます。（就業時間等は柔軟に対応致しますのでご相談ください）■仕事内容 （２回目以降の雇用契約更新は１年単位の予定です）</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1209010005061')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1209010005061')">★</button>
+      <div class="card-title">ＩＴ／ＡＩシステムの開発兼ＰＭ（在宅勤務、正社員）</div>
+      <div class="card-company">マインドバンク合同会社</div>
+      <div class="card-location">千葉県船橋市</div>
+      <div class="card-salary">400,000円〜700,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">顧客のＤＸ推進支援で最先端の生成ＡＩ技術と周辺ソリューションを組合わせて最適なシステムを構築します。具体的には業務アプリ開発、各種ＡＩエージェントで業務の自律自動化、ＡＰＩ連携など</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1307041097861')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1307041097861')">★</button>
+      <div class="card-title">秘書業務を中心とした事務サポート（パート）在宅勤務</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">千葉県千葉市美浜区</div>
+      <div class="card-salary">1,400円〜1,700円</div>
+      <div class="card-worktime">（1）08時30分〜13時00分</div>
+      <div class="card-desc">・代表の事務まわりを担う「秘書」およびクライアント・パートナー企業・アライアンス先との調整役を担う「コーディネーター」</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1301064820861')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1301064820861')">★</button>
+      <div class="card-title">【東京】組込ソフト開発（メンバー）</div>
+      <div class="card-company">株式会社フェローシップ</div>
+      <div class="card-location">東京都千代田区</div>
+      <div class="card-salary">280,000円〜450,000円</div>
+      <div class="card-worktime">フレックスタイム制 （1）07時00分〜22時00分</div>
+      <div class="card-desc">製品開発ＥＧチームの立ち上げメンバーとして、組込ソフトエンジニアの募集です。</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1301064842661')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1301064842661')">★</button>
+      <div class="card-title">エンタメ系オンラインサービス開発・バックエンド（契約）</div>
+      <div class="card-company">アルファパートナーズ株式会社</div>
+      <div class="card-location">東京都千代田区</div>
+      <div class="card-salary">252,080円〜304,100円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">成長中のエンタメ系オンラインサービスの、バックエンドエンジニア。Ｒｕｂｙ ｏｎ Ｒａｉｌｓを用いたＡＰＩ設計・開発を中心に、システムのパフォーマンス改善や運用自動化をご担当いただき</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1304082832461')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1304082832461')">★</button>
+      <div class="card-title">ＩＴ開発、運用保守、プロジェクトマネジメント</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都港区</div>
+      <div class="card-salary">201,000円〜201,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">ＩＴ分野における技術支援事業を展開し、各企業の開発・運用プロジェクトへ参画、業務効率化と課題解決に貢献しています。保険・自動車業界を中心に実績を重ね、リモート勤務も併用した</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1307041054861')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1307041054861')">★</button>
+      <div class="card-title">企画営業</div>
+      <div class="card-company">株式会社キャリアジャパン</div>
+      <div class="card-location">東京都渋谷区</div>
+      <div class="card-salary">230,000円〜280,000円</div>
+      <div class="card-worktime">（1）10時00分〜18時00分</div>
+      <div class="card-desc">職業・人材紹介の企画営業 ・求人企業の開拓（今までの人脈をご利用下さい） ・求職者の発掘（スカウトや各媒体を使用）</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308058870761')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308058870761')">★</button>
+      <div class="card-title">大手ＩＴ系企業内インフラ運用保守　／　在宅勤務</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">500,000円〜600,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">大手ＩＴ企業のインフラ運用保守業務を担当いただきます。主な仕事内容は●情報システムインフラ（ＡＷＳ、Ｌｉｎｕｘサーバ等）の運用保守、●ドキュメント作成などです。</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308058871861')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308058871861')">★</button>
+      <div class="card-title">Ｍｉｃｒｓｏｆｔ３６５管理者業務　／　在宅勤務</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">500,000円〜650,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">大手企業内でＭｉｃｒｓｏｆｔ３６５についての既存運用から新運用への引継ぎ・巻き取り等のリーダー業務を担当いただきます。</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308059213861')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308059213861')">★</button>
+      <div class="card-title">【公共事業】中小企業支援における事務局のお仕事＊一部在宅</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">270,000円〜300,000円</div>
+      <div class="card-worktime">（1）09時00分〜17時30分</div>
+      <div class="card-desc">当社が受託した公共事業で、人材支援に関する事務局で事務のお仕事をお願いします。・事務局に入る問合せ対応（電話・メール）</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1401029703761')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1401029703761')">★</button>
+      <div class="card-title">事務（在宅勤務）</div>
+      <div class="card-company">土屋税務会計事務所　　土屋　陽一</div>
+      <div class="card-location">神奈川県横浜市保土ケ谷区</div>
+      <div class="card-salary">1,250円〜1,500円</div>
+      <div class="card-worktime">（1）10時00分〜12時30分</div>
+      <div class="card-desc">所長税理士１名、パート２名。アットホームな雰囲気の事務所です。会計ソフトの入力、給与計算、文書スキャン作業、税理士補助業務</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2502002871361')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2502002871361')">★</button>
+      <div class="card-title">組合書記【在宅勤務可・兼業可】</div>
+      <div class="card-company">日軽パネルシステム労働組合</div>
+      <div class="card-location">滋賀県長浜市</div>
+      <div class="card-salary">2,000円〜2,000円</div>
+      
+      <div class="card-desc">１ 総務・事務関連業務・組合員名簿や名義、連絡先などの情報管理（Ｅｘｃｅｌ等）・組合費の徴収状況の管理・記録</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2713008089661')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2713008089661')">★</button>
+      <div class="card-title">オンラインフリースクール子ども支援スタッフ　【在宅勤務】</div>
+      <div class="card-company">フォレストリンク</div>
+      <div class="card-location">大阪府枚方市</div>
+      <div class="card-salary">1,177円〜1,600円</div>
+      <div class="card-worktime">交替制（シフト制） （1）08時50分〜12時30分 （2）12時50分〜15時</div>
+      <div class="card-desc">Ｍｉｎｅｃｒａｆｔを活用したオンラインフリースクール「フォレストリンク」にて、不登校・ひきこもりの子どもたちへのサポートスタッフとして活躍していただきます。勤務はすべてＤｉｓｃｏｒ</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2807003452361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2807003452361')">★</button>
+      <div class="card-title">情報処理エンジニア</div>
+      <div class="card-company">コンベックス・アプリケーションズ　合同会社</div>
+      <div class="card-location">大阪府大阪市北区</div>
+      <div class="card-salary">240,000円〜320,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">＊ＡＩを利用した情報処理に関する研究及びソフトウェア 開発の補助 業務システムのリサーチ＆デベロップメント</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2710006664661')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2710006664661')">★</button>
+      <div class="card-title">海外ネット通販の新商品開拓・企画販売</div>
+      <div class="card-company">株式会社　イマジニスト</div>
+      <div class="card-location">和歌山県和歌山市</div>
+      <div class="card-salary">194,990円〜194,990円</div>
+      <div class="card-worktime">（1）08時10分〜17時10分</div>
+      <div class="card-desc">ネットショップの運営業務を通してノウハウを習得していただいた後は、新商品の開拓・企画販売をお任せします。◇受注管理・ネット通販管理システムによる注文内容確認、商品の</div>
+      <div class="card-date">📋 受付年月日：2026-06-16</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_0804010186661')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_0804010186661')">★</button>
+      <div class="card-title">経理・財務業務【主任職】</div>
+      <div class="card-company">株式会社　日立テクノロジーアンドサービス</div>
+      <div class="card-location">茨城県土浦市</div>
+      <div class="card-salary">296,800円〜352,000円</div>
+      <div class="card-worktime">（1）08時45分〜17時15分</div>
+      <div class="card-desc">経理財務スタッフとして、財務関連業務や税務申告書・業績管理資料の作成を担当していただきます。・財務関連業務の統括</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1201018894061')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1201018894061')">★</button>
+      <div class="card-title">建設リフォームアドバイザー</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">千葉県千葉市稲毛区</div>
+      <div class="card-salary">200,000円〜500,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">・建設業に関する戦略検討、実施など・リフォームに関するアドバイザー・現場管理（相談により）</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1209009908861')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1209009908861')">★</button>
+      <div class="card-title">データ入力・在宅勤務＜船橋営業所＞</div>
+      <div class="card-company">株式会社　ニューデンタル</div>
+      <div class="card-location">千葉県船橋市</div>
+      <div class="card-salary">1,200円〜1,200円</div>
+      
+      <div class="card-desc">完全在宅勤務 週２回～週４日 一日３時間！残業一切なし！副業ＯＫ！すきま時間を活用できます。</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1209009928361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1209009928361')">★</button>
+      <div class="card-title">某メガバンクの基盤構築・保守プロジェクトにおける社員支援</div>
+      <div class="card-company">ＣＩＭキッコー株式会社</div>
+      <div class="card-location">東京都品川区</div>
+      <div class="card-salary">245,000円〜478,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">某メガバンクの基盤構築・保守プロジェクトにおける社員支援業務（ＰＭＯ）・案件推進に係るユーザー／ベンダーとの折衝、調整</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1304082675961')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1304082675961')">★</button>
+      <div class="card-title">医療系システム開発エンジニア</div>
+      <div class="card-company">株式会社　ＪａｐａｎＴｅｃｈｎｏｌｏｇｙ　本店</div>
+      <div class="card-location">東京都港区</div>
+      <div class="card-salary">449,000円〜449,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">・薬局向けサービスのバックエンドプログラム改修・ＳＱＬ ＳｅｒｖｅｒからＰｏｓｔｇｒｅＳＱＬへのＤＢ移行に伴う詳細設計</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1307040890661')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1307040890661')">★</button>
+      <div class="card-title">経理スタッフ（パート）</div>
+      <div class="card-company">株式会社シーズ・ワン</div>
+      <div class="card-location">東京都世田谷区</div>
+      <div class="card-salary">1,230円〜1,400円</div>
+      <div class="card-worktime">（1）09時30分〜18時30分</div>
+      <div class="card-desc">経理業務を通して、支援先の中小病院をサポートする仕事です。</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308058785161')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        <span class="tag tag-remote">在宅可</span>
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308058785161')">★</button>
+      <div class="card-title">最新技術で上流を目指すリモートセキュリティ職募集案内</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■脆弱性診断自動化の設計補助■ＳＯＣ分析基盤の改善実装■ゼロトラスト認証連携の検証</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308058795361')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-disabled">障害者</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308058795361')">★</button>
+      <div class="card-title">教育役も目指せるＳＲＥエンジニア上流キャリア採用枠</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■ Ｋｕｂｅｒｎｅｔｅｓ運用設計の改善主導■ Ｔｅｒｒａｆｏｒｍ構成の再利用設計■ 障害対応フローの高度化</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308058800261')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308058800261')">★</button>
+      <div class="card-title">副業経験を生かせる安定基盤の信頼性工学ＳＲＥエンジニア</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■Ｋｕｂｅｒｎｅｔｅｓ運用と可用性改善の実装■Ｔｅｒｒａｆｏｒｍで環境構成をコード化■セキュリティ運用手順の改善</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1308058827561')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1308058827561')">★</button>
+      <div class="card-title">残業少なめ心理安全性重視フルスタックエンジニア採用</div>
+      <div class="card-company">株式会社　イデアルアーキテクツ</div>
+      <div class="card-location">東京都新宿区</div>
+      <div class="card-salary">266,666円〜500,000円</div>
+      <div class="card-worktime">（1）10時00分〜19時00分</div>
+      <div class="card-desc">■Ｎｅｘｔ．ｊｓとＴｙｐｅＳｃｒｉｐｔによる機能開発■サーバーレスＡＰＩの設計と改善■社内ツールの実装と保守</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1401029570061')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-disabled">障害者</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1401029570061')">★</button>
+      <div class="card-title">ＩＴエンジニア（販社社内システム開発）</div>
+      <div class="card-company">Ａｍｉｔｙ　Ｌｉｎｋ株式会社</div>
+      <div class="card-location">神奈川県横浜市西区</div>
+      <div class="card-salary">250,000円〜650,000円</div>
+      <div class="card-worktime">交替制（シフト制） （1）09時00分〜17時30分</div>
+      <div class="card-desc">概要：エンドユーザーからの問い合わせに対する一次調査、およびエスカレーション業務をご担当いただきます。事象の切り分け：問い合わせ内容がシステム障害・不具合に該当す</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1804002929161')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1804002929161')">★</button>
+      <div class="card-title">【正社員】ＳＥ・プログラマ、ネットワーク技術者／関東</div>
+      <div class="card-company">株式会社　アートプロデザインワークス</div>
+      <div class="card-location">神奈川県横浜市中区</div>
+      <div class="card-salary">230,000円〜600,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">◇コンピュータソフトの設計・開発 （Ｊａｖａ、．ｎｅｔ、Ｃ言語開発経験者優遇）</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_1307040712561')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_1307040712561')">★</button>
+      <div class="card-title">（障）ソフトウェア開発技術者</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">東京都渋谷区</div>
+      <div class="card-salary">656,000円〜750,000円</div>
+      <div class="card-worktime">裁量労働制</div>
+      <div class="card-desc">（主な業務内容）まずは事業ドメインやプロダクト理解を深めていただくために、事業責任者やプロダクトマネージャーと協力しながら、要件定義から</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2803006678461')">
+      <div class="card-tags">
+        <span class="tag tag-type-full">正社員</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2803006678461')">★</button>
+      <div class="card-title">主任介護支援専門員</div>
+      <div class="card-company">訪問介護ハウス　ブリオ
+（合同会社　ＢＲＩＯ）</div>
+      <div class="card-location">兵庫県尼崎市</div>
+      <div class="card-salary">275,000円〜305,000円</div>
+      <div class="card-worktime">（1）09時00分〜18時00分</div>
+      <div class="card-desc">訪問介護事業所での主任ケアマネジャー事業拡大にて新規居宅を立ち上げます。ケアプラン作成、担当者会議等。</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2904001790261')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2904001790261')">★</button>
+      <div class="card-title">一般事務・営業事務</div>
+      <div class="card-company">ユースタッフ合同会社</div>
+      <div class="card-location">奈良県橿原市</div>
+      <div class="card-salary">1,250円〜1,250円</div>
+      <div class="card-worktime">（1）09時00分〜17時00分</div>
+      <div class="card-desc">＊各種書類作成・整理＊請求書作成＊給与計算 等</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2703018627861')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2703018627861')">★</button>
+      <div class="card-title">障）営業リスト作成業務</div>
+      <div class="card-company">（事業所の意向により公開していません）</div>
+      <div class="card-location">大阪府大阪市西区</div>
+      <div class="card-salary">1,230円〜1,230円</div>
+      
+      <div class="card-desc">＊弊社サービスとの親和性の高い企業様のリストアップや企業様に 送るメールの作成・送付作業等を行っていただきます。顧客デー タの入力をする作業となります。</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  
+    <div class="job-card" onclick="openModal('jno_2703018629161')">
+      <div class="card-tags">
+        <span class="tag tag-type-part">正社員以外</span>
+        <span class="tag tag-general">一般</span>
+        
+        
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn " onclick="toggleFav(event,'jno_2703018629161')">★</button>
+      <div class="card-title">障）リサーチ業務、及びそれらに付随する業務</div>
+      <div class="card-company">株式会社ＰＬＡＮーＢマーケティングパートナーズ</div>
+      <div class="card-location">大阪府大阪市西区</div>
+      <div class="card-salary">1,230円〜1,230円</div>
+      
+      <div class="card-desc">＊パソコンを用いた調査、データ収集、入力業務 例：特定業界のニュース情報をリサーチ、社内システムへの データ入力、ＡＩがリサーチした内容の正誤チェック</div>
+      <div class="card-date">📋 受付年月日：2026-06-15</div>
+    </div>
+  </div>
+
+<!-- Job Detail Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalIfOverlay(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-tags" id="modal-tags"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-company" id="modal-company"></div>
+    <hr class="modal-divider">
+    <div class="modal-grid" id="modal-grid"></div>
+    <div class="modal-desc-box">
+      <div class="modal-desc-title">仕事内容・特徴</div>
+      <div class="modal-desc-text" id="modal-desc"></div>
+    </div>
+    <a class="btn-apply" id="modal-apply-btn" href="#" target="_blank">🔗 応募・公式で詳細を見る</a>
+    <div class="modal-apply-note">※公式の詳細ページへ直接ジャンプします<br>削除済みだった場合は下のボタンで一覧から削除できます。</div>
+    <button class="btn-delete-job" id="btn-delete-job" onclick="deleteCurrentJob()">🗑 ハローワークで削除済み・一覧から削除する</button>
+  </div>
+</div>
+
+<!-- Clear Confirm Modal -->
+<div class="confirm-modal" id="confirm-clear">
+  <div class="confirm-box">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">警告：データの全削除</div>
+    <div class="confirm-text">保存されているすべての求人データを削除し、初期状態に戻します。本当にクリアしますか？</div>
+    <div class="confirm-buttons">
+      <button class="btn-cancel" onclick="closeClearConfirm()">キャンセル</button>
+      <button class="btn-confirm-delete" onclick="clearAllJobs()">削除する</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ 71 件の求人データを書き出しました。GitHubにアップロードしてください。</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding: 2rem 1rem 1.5rem; color: #4a6a8a; font-size: 0.78rem; line-height: 1.8; border-top: 1px solid var(--border); margin-top: 1rem;">
+  <div style="margin-bottom: 0.3rem;">© 2026 eight株式会社. All rights reserved.</div>
+  <div>※本サイトは社内利用目的のサービスであり、実際のハローワーク公式サービスとは関係ありません。</div>
+</div>
+
+<script>
+  (function(){try{
+    var j=JSON.parse("[{\"id\":\"jno_1308060190961\",\"jobNo\":\"13080-60190961\",\"title\":\"営業／仙台市を含む東北エリア担当／在宅勤務\",\"company\":\"株式会社　元創\",\"location\":\"宮城県仙台市青葉区福島県福島市青森県青森市岩手県盛岡市\",\"isRemote\":true,\"salary\":\"250,000円〜350,000円\",\"workTime\":\"（1）09時00分〜17時30分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308060190961&kJKbn=1&jGSHNo=%2FWyFehSWbJgTpz0MXX9jfg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"火葬場の管理運営を行っている会社です。・自治体向け営業活動・火葬場業務受託後の立ち上げ支援\"},{\"id\":\"jno_0912001880961\",\"jobNo\":\"09120-01880961\",\"title\":\"不動産仲介に関する翻訳・通訳（１ｈ／日の在宅勤務）\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"栃木県那須郡那須町\",\"isRemote\":true,\"salary\":\"2,500円〜2,500円\",\"workTime\":\"\",\"holiday\":\"土日祝 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=0912001880961&kJKbn=1&jGSHNo=SOCmgBxtcK5R8xxNhBZLlw%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"翻訳及び通訳・外国人（英語圏）向けポータルサイトからの反響への返答・外国人（英語圏）向けポータルサイトへの掲載\"},{\"id\":\"jno_0701008381661\",\"jobNo\":\"07010-08381661\",\"title\":\"インターネット応接等事務員：「在宅勤務（テレワーク）」\",\"company\":\"公立大学法人　福島県立医科大学　乳腺外科学講座\",\"location\":\"福島県福島市\",\"isRemote\":true,\"salary\":\"1,200円〜1,200円\",\"workTime\":\"\",\"holiday\":\"他 週休二日制：その他\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=0701008381661&kJKbn=1&jGSHNo=i8SeATii1BzGD1T%2FNQLTHA%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"９時から２１時までの間，週４時間程度研究参加者オンラインサロンでファシリテーターとしてシナリオを読んで頂きます\"},{\"id\":\"jno_0804010186661\",\"jobNo\":\"08040-10186661\",\"title\":\"経理・財務業務【主任職】\",\"company\":\"株式会社　日立テクノロジーアンドサービス\",\"location\":\"茨城県土浦市\",\"isRemote\":false,\"salary\":\"296,800円〜352,000円\",\"workTime\":\"（1）08時45分〜17時15分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：126日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=0804010186661&kJKbn=1&jGSHNo=uYuM%2B9RMc8fZHiYQDT6xoQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"経理財務スタッフとして、財務関連業務や税務申告書・業績管理資料の作成を担当していただきます。・財務関連業務の統括\"},{\"id\":\"jno_1006002527361\",\"jobNo\":\"10060-02527361\",\"title\":\"幹部候補募集｜ヴィンテージ日本酒ブランドを担う営業職\",\"company\":\"清水屋酒造　有限会社\",\"location\":\"群馬県館林市\",\"isRemote\":false,\"salary\":\"360,000円〜490,000円\",\"workTime\":\"\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：129日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1006002527361&kJKbn=1&jGSHNo=Kf7aP8NLZXp7uM4C5JpTGQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"酒類の法人向け営業職です。◇首都圏を中心とした料飲店・小売店・百貨店・飲食業界向けの法人営業\"},{\"id\":\"jno_1208011657461\",\"jobNo\":\"12080-11657461\",\"title\":\"補助金事務補佐員\",\"company\":\"株式会社Ｐａｌｅ　Ｂｌｕｅ\",\"location\":\"千葉県柏市\",\"isRemote\":false,\"salary\":\"1,300円〜1,500円\",\"workTime\":\"\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1208011657461&kJKbn=1&jGSHNo=3TgfTFBH6HKP%2B4jgEV6g4Q%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"既存の補助金、新規で申請する補助金に関わる業務全般をお任せします。\"},{\"id\":\"jno_1002009553561\",\"jobNo\":\"10020-09553561\",\"title\":\"相談支援専門員\",\"company\":\"株式会社　ワンセルフ\",\"location\":\"群馬県富岡市\",\"isRemote\":false,\"salary\":\"250,000円〜300,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"日祝他 週休二日制：毎週 年間休日数：107日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1002009553561&kJKbn=1&jGSHNo=m%2BNaMUqY4vmlCQjH9Se6KA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"ご利用者やご家族からの相談に寄り添い、生活上の困りごとや将来に関する不安を整理しながら、必要な福祉サービスや支援につなげる相談支援業務です。\"},{\"id\":\"jno_1209010058661\",\"jobNo\":\"12090-10058661\",\"title\":\"ＡＩシステムの開発の営業アシスタント（在宅勤務、正社員）\",\"company\":\"マインドバンク合同会社\",\"location\":\"千葉県船橋市\",\"isRemote\":true,\"salary\":\"300,000円〜450,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1209010058661&kJKbn=1&jGSHNo=cuSKcYxGVLkXD%2B1XLO%2FTJQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"顧客のＤＸ推進支援で最先端のＡＩ技術と周辺ソリューションを組合わせて最適なシステム構築を提案する営業のアシスタント業務になります。\"},{\"id\":\"jno_1210005645461\",\"jobNo\":\"12100-05645461\",\"title\":\"介護職（ケアマネジャー）　＊６０歳以上の方の応募も歓迎♪\",\"company\":\"株式会社　ライフサポートＳａｎｐｏｈ　ｅ－ｓｔｙｌｅ佐倉\",\"location\":\"千葉県佐倉市\",\"isRemote\":false,\"salary\":\"325,000円〜383,334円\",\"workTime\":\"交替制（シフト制）\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1210005645461&kJKbn=1&jGSHNo=UWKPLCaaNCV0LiT8C4JOpA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"・利用者様のケアプラン作成 ・介護保険の更新申請業務 ・その他、関連する業務\"},{\"id\":\"jno_1009002353561\",\"jobNo\":\"10090-02353561\",\"title\":\"社労士業務スタッフ（テレワーク）\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"群馬県藤岡市\",\"isRemote\":true,\"salary\":\"1,100円〜1,200円\",\"workTime\":\"\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1009002353561&kJKbn=1&jGSHNo=4k4qVJk9Z%2FoaxaH0ncYLng%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"※原則、テレワークで行っていただきます。（就業時間等は柔軟に対応致しますのでご相談ください）■仕事内容 （２回目以降の雇用契約更新は１年単位の予定です）\"},{\"id\":\"jno_1209010005061\",\"jobNo\":\"12090-10005061\",\"title\":\"ＩＴ／ＡＩシステムの開発兼ＰＭ（在宅勤務、正社員）\",\"company\":\"マインドバンク合同会社\",\"location\":\"千葉県船橋市\",\"isRemote\":true,\"salary\":\"400,000円〜700,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1209010005061&kJKbn=1&jGSHNo=cuSKcYxGVLkXD%2B1XLO%2FTJQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"顧客のＤＸ推進支援で最先端の生成ＡＩ技術と周辺ソリューションを組合わせて最適なシステムを構築します。具体的には業務アプリ開発、各種ＡＩエージェントで業務の自律自動化、ＡＰＩ連携など\"},{\"id\":\"jno_1307041097861\",\"jobNo\":\"13070-41097861\",\"title\":\"秘書業務を中心とした事務サポート（パート）在宅勤務\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"千葉県千葉市美浜区\",\"isRemote\":true,\"salary\":\"1,400円〜1,700円\",\"workTime\":\"（1）08時30分〜13時00分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1307041097861&kJKbn=1&jGSHNo=tYxajalthMsCCKFD1WUw1A%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"・代表の事務まわりを担う「秘書」およびクライアント・パートナー企業・アライアンス先との調整役を担う「コーディネーター」\"},{\"id\":\"jno_1201018894061\",\"jobNo\":\"12010-18894061\",\"title\":\"建設リフォームアドバイザー\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"千葉県千葉市稲毛区\",\"isRemote\":false,\"salary\":\"200,000円〜500,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1201018894061&kJKbn=1&jGSHNo=fxcJBCb%2B0YqP1QtV%2BcCAzw%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"・建設業に関する戦略検討、実施など・リフォームに関するアドバイザー・現場管理（相談により）\"},{\"id\":\"jno_1209009908861\",\"jobNo\":\"12090-09908861\",\"title\":\"データ入力・在宅勤務＜船橋営業所＞\",\"company\":\"株式会社　ニューデンタル\",\"location\":\"千葉県船橋市\",\"isRemote\":true,\"salary\":\"1,200円〜1,200円\",\"workTime\":\"\",\"holiday\":\"他 週休二日制：その他\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1209009908861&kJKbn=1&jGSHNo=OanH1apK%2FrpsrL4IHdFBhg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"完全在宅勤務 週２回～週４日 一日３時間！残業一切なし！副業ＯＫ！すきま時間を活用できます。\"},{\"id\":\"jno_1301066862961\",\"jobNo\":\"13010-66862961\",\"title\":\"総合コンサルティング企業、助成金のコンサルティング業務\",\"company\":\"株式会社Ｏｃｔａｇｏｎ　Ｃｏｎｓｕｌｔｉｎｇ\",\"location\":\"東京都中央区\",\"isRemote\":false,\"salary\":\"200,000円〜261,000円\",\"workTime\":\"フレックスタイム制 （1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：129日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1301066862961&kJKbn=1&jGSHNo=YV2VZ%2Bz%2BQU5l9nV6d7BXNA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"総合コンサルティング企業、助成金のコンサルティング業務・各種助成金（主に人材開発支援助成金）のコンサルティング・提携社労士法人との折衝、クライアントとのコミュニケーション\"},{\"id\":\"jno_1304084453361\",\"jobNo\":\"13040-84453361\",\"title\":\"インサイドセールス\",\"company\":\"株式会社　ダイレクト・リンク\",\"location\":\"東京都港区\",\"isRemote\":false,\"salary\":\"205,000円〜405,000円\",\"workTime\":\"（1）08時45分〜18時00分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1304084453361&kJKbn=1&jGSHNo=Jp7mXuVrcX3B41onMsC8lA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"ＡＩを活用したインサイドセールス（営業職）法人向けにパソコンや、周辺機器、ソフトウェア等をご提案 電話を活用した営業スタイルです。\"},{\"id\":\"jno_1304084723861\",\"jobNo\":\"13040-84723861\",\"title\":\"医療画像のクラウド読影サービスの事業開発・営業\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都渋谷区\",\"isRemote\":false,\"salary\":\"1,500円〜4,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1304084723861&kJKbn=1&jGSHNo=0rLLuEkX1NrUzCxB8M2VSg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"１．医療機関（健診センター、クリニック、病院等）の開拓：クラウド読影サービスを導入・利用していただけるクライアント医療機関の新規開拓営業。潜在顧客（特に健診センター等）へのヒアリン\"},{\"id\":\"jno_1308060400461\",\"jobNo\":\"13080-60400461\",\"title\":\"ＡＷＳデータエンジニア未経験から在宅中心で成長加速\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":true,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308060400461&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■ＡＷＳ上のデータ連携処理の実装補助■ＢｉｇＱｕｅｒｙとＳｎｏｗｆｌａｋｅのテーブル設計補助■運用監視ダッシュボードの更新\"},{\"id\":\"jno_1411002420461\",\"jobNo\":\"14110-02420461\",\"title\":\"システムエンジニア★在宅勤務可（完全テレワーク可）\",\"company\":\"株式会社はたママ\",\"location\":\"神奈川県足柄上郡松田町\",\"isRemote\":true,\"salary\":\"1,800円〜2,500円\",\"workTime\":\"フレックスタイム制 （1）09時00分〜13時00分 （2）10時00分〜12時00分 （3）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1411002420461&kJKbn=1&jGSHNo=UnbNmKNcy4GxNk%2BFKczFBQ%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"システムエンジニアとして、社内情シス・Ｗｅｂ開発・運用保守をフルリモートで支える仕事です。時短勤務も相談ＯＫ、子育てと両立しながらキャリアを続けたい方を歓迎します。＃マザーズ\"},{\"id\":\"jno_1004004866561\",\"jobNo\":\"10040-04866561\",\"title\":\"【東京】営業職（海外営業担当）\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都千代田区\",\"isRemote\":false,\"salary\":\"251,100円〜306,200円\",\"workTime\":\"フレックスタイム制 （1）08時30分〜17時30分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1004004866561&kJKbn=1&jGSHNo=%2Bv7BpPSVFdeW0CJlumXkBw%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"「はやぶさ」「アメダス」等、国家案件に採用される宇宙・防衛・気象・防災の観測機器や送信機等を製造している当社にて、【海外営業】をお任せします。\"},{\"id\":\"jno_1308060242461\",\"jobNo\":\"13080-60242461\",\"title\":\"営業事務【完全在宅ワーク・必要あれば出勤有】\",\"company\":\"メディカルフィッティングサポート　株式会社\",\"location\":\"東京都杉並区\",\"isRemote\":true,\"salary\":\"1,300円〜1,500円\",\"workTime\":\"（1）09時00分〜16時00分\",\"holiday\":\"土日祝 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308060242461&kJKbn=1&jGSHNo=0DJDiwbHhU%2Fo97F6OEju%2Bw%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"１．インターネット上の情報をＧｏｏｇｌｅやＹａｈｏｏ！の 検索エンジンを使って、当社が必要とする情報を収集する２．集めた情報をＡＩを使って取捨選択し、エクセルシートや\"},{\"id\":\"jno_1313014888761\",\"jobNo\":\"13130-14888761\",\"title\":\"顧客もちの印刷営業／在宅勤務\",\"company\":\"有限会社　国宗\",\"location\":\"東京都江戸川区\",\"isRemote\":true,\"salary\":\"210,000円〜210,000円\",\"workTime\":\"（1）10時00分〜17時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1313014888761&kJKbn=1&jGSHNo=qUpFNj6SpRvrCuuEQKtpww%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"＊廃業予定の印刷会社の経営者様に対してその会社の持つ顧客を確 保する営業をしていただきます。＊営業範囲は一都三県内。\"},{\"id\":\"jno_1410005487461\",\"jobNo\":\"14100-05487461\",\"title\":\"ＷＥＢディレクター・プロデューサー\",\"company\":\"カズミア株式会社\",\"location\":\"神奈川県海老名市\",\"isRemote\":false,\"salary\":\"1,280円〜1,600円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1410005487461&kJKbn=1&jGSHNo=40uEMIJ%2FKkXTOpQM1qAgAA%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"・クライアントのＷｅｂ制作、デザイン作成に関する ディレクション業務・自社運営サイトの企画・運営・制作など\"},{\"id\":\"jno_2701028975761\",\"jobNo\":\"27010-28975761\",\"title\":\"営業／東京営業所\",\"company\":\"サンショウシステム　株式会社\",\"location\":\"東京都港区\",\"isRemote\":false,\"salary\":\"200,000円〜270,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：126日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2701028975761&kJKbn=1&jGSHNo=9m2SFEbFpunmKcKspeRoYg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"自社開発のソフ販売及びプログラマー等の技術者の派遣業務。取引先に技術者を提案していただきます。\"},{\"id\":\"jno_4702009747061\",\"jobNo\":\"47020-09747061\",\"title\":\"未来のネットの学校を「人」から創り上げる、人事・研修担当\",\"company\":\"学校法人　角川ドワンゴ学園\",\"location\":\"東京都中央区\",\"isRemote\":false,\"salary\":\"250,000円〜375,000円\",\"workTime\":\"フレックスタイム制 （1）09時30分〜18時30分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：123日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=4702009747061&kJKbn=1&jGSHNo=4KLLYIR%2FfCMTviuDpPaJYg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"角川ドワンゴ学園の人事・研修領域において、教職員向けの研修担当として、以下の業務を中心にご担当いただきます。・研修運営に関わる業務（主に、研修設計、社員育成、研修講師）\"},{\"id\":\"jno_4702009748361\",\"jobNo\":\"47020-09748361\",\"title\":\"「人」から創り上げる、人事・研修担当※管理職候補\",\"company\":\"学校法人　角川ドワンゴ学園\",\"location\":\"東京都中央区\",\"isRemote\":false,\"salary\":\"375,000円〜500,000円\",\"workTime\":\"フレックスタイム制 （1）09時30分〜18時30分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：123日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=4702009748361&kJKbn=1&jGSHNo=4KLLYIR%2FfCMTviuDpPaJYg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"角川ドワンゴ学園の人事領域において、採用・研修領域をお任せします。管理職候補として、採用・研修領域の戦略策定、予算管理・分析、実際の運用およびチームマネジメントを担っていただきます\"},{\"id\":\"jno_1307041640261\",\"jobNo\":\"13070-41640261\",\"title\":\"バイヤー／カテゴリーマネージャー\",\"company\":\"オフビートテクニッポン株式会社\",\"location\":\"東京都渋谷区\",\"isRemote\":false,\"salary\":\"300,000円〜600,000円\",\"workTime\":\"（1）09時30分〜18時00分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：121日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1307041640261&kJKbn=1&jGSHNo=iIFYMLUqosdxyDgTFhGNhg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"○化粧品、ファッション関連商品、食品、その他カテゴリーの調達。○顧客ニーズと市場動向に基づいたカテゴリー戦略の策定と実行を\"},{\"id\":\"jno_1308060150361\",\"jobNo\":\"13080-60150361\",\"title\":\"評価還元が明確な在宅主体セキュリティエンジニア採用\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":true,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308060150361&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■ＳＯＣ監視基盤のルール改善■脆弱性診断と優先度判定■ゼロトラスト運用の定着支援\"},{\"id\":\"jno_1308060163761\",\"jobNo\":\"13080-60163761\",\"title\":\"帰属意識を育む柔軟勤務セキュリティ職募集案内情報中\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":false,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308060163761&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■脆弱性診断の再現テスト実施■ＳＯＣ対応履歴の整理と報告■ゼロトラスト運用ルールの更新補助\"},{\"id\":\"jno_1312013101361\",\"jobNo\":\"13120-13101361\",\"title\":\"ＷＥＢマーケティング営業／在宅勤務可／年間休日１３０日\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都葛飾区\",\"isRemote\":true,\"salary\":\"400,000円〜692,073円\",\"workTime\":\"（1）09時00分〜18時30分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：130日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1312013101361&kJKbn=1&jGSHNo=K86EQ7jxDpI7mBZbnzGiGA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"ホームページ制作、ＳＥＯ対策、ＭＥＯ対策、ＡＩ活用支援サービスの法人営業を担当していただきます。中小企業や店舗の集客・採用・売上向上に関する課題をヒアリングし、最適なＷＥＢマーケテ\"},{\"id\":\"jno_1317025802161\",\"jobNo\":\"13170-25802161\",\"title\":\"新規開発・保守エンジニア／【在宅】\",\"company\":\"有限会社　プレシス\",\"location\":\"東京都三鷹市\",\"isRemote\":true,\"salary\":\"250,000円〜250,000円\",\"workTime\":\"（1）09時00分〜17時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1317025802161&kJKbn=1&jGSHNo=%2FI3otaNJwelXQ9hcmbfPVg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"◎業務システムＣ＃【歓迎】ＷＥＢ系開発経験、データ整理・分析 と丁寧な作業ができる方，簿記・財務会計の知識， ＥＸＣＥＬＶＢＡ ｊａｖａｓｃｒｉｐｔ，ＳＱＬ，ＸＢＲＬ（ＸＭＬ） Ｈ\"},{\"id\":\"jno_1306008134361\",\"jobNo\":\"13060-08134361\",\"title\":\"【厚木・在宅】世界を変える半導体デジタル設計エンジニア\",\"company\":\"株式会社　シーディア　東京デザインセンター\",\"location\":\"神奈川県厚木市\",\"isRemote\":true,\"salary\":\"363,500円〜610,500円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：123日\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1306008134361&kJKbn=1&jGSHNo=LkOpyzin2ImcuEHwoGn5LQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■半導体製品（デジタル）の開発における フロントエンド、ミドルエンド、バックエンドの設計または評価 ＲＴＬ設計（論理設計）・検証／ＤＦＴ／インプリ／Ｐ＆Ｒ／\"},{\"id\":\"jno_1306008135661\",\"jobNo\":\"13060-08135661\",\"title\":\"【田町・在宅】半導体製造装置ソフト開発／Ｃ言語／２７万円\",\"company\":\"株式会社　シーディア　東京デザインセンター\",\"location\":\"東京都港区\",\"isRemote\":true,\"salary\":\"270,000円〜361,500円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：123日\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1306008135661&kJKbn=1&jGSHNo=LkOpyzin2ImcuEHwoGn5LQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"【モノづくりの現場を、ソフトで動かすエンジニアへ】・半導体製造装置向けソフトウェア開発・設計、評価、テスト\"},{\"id\":\"jno_1301065547861\",\"jobNo\":\"13010-65547861\",\"title\":\"開発エンジニア（ＳＥ・ＰＧ）\",\"company\":\"株式会社ボーダーレステクノロジー\",\"location\":\"東京都千代田区\",\"isRemote\":false,\"salary\":\"234,360円〜585,860円\",\"workTime\":\"（1）09時30分〜18時30分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：128日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1301065547861&kJKbn=1&jGSHNo=wFGqioJU37GB1H0jEhzgIA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"◎何らかの開発経験者、Ｊａｖａ、Ｃ＃、ＰＨＰ、ＣＯＢＯＬ等、 実務経験６か月以上ある方の募集です。\"},{\"id\":\"jno_1301065850461\",\"jobNo\":\"13010-65850461\",\"title\":\"【経験者歓迎】社労士業務補助※週４日、１日５時間から可能\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都中央区\",\"isRemote\":false,\"salary\":\"1,270円〜1,500円\",\"workTime\":\"（1）09時00分〜17時00分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1301065850461&kJKbn=1&jGSHNo=QgGBj2u0l5wmR5fjQ3OUBQ%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"お客様の保険関係の申請データ作成や給与計算データの作成、チェックを中心に内容の確認、お客様とのやり取りを行っていただきます。\"},{\"id\":\"jno_1314008988261\",\"jobNo\":\"13140-08988261\",\"title\":\"プログラマー／トライアル併用\",\"company\":\"インデックスシステムコンサルタンツ株式会社\",\"location\":\"東京都日野市\",\"isRemote\":false,\"salary\":\"116,350円〜179,000円\",\"workTime\":\"フレックスタイム制 （1）10時00分〜16時15分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：150日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-17\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1314008988261&kJKbn=1&jGSHNo=lwXj2pDPGaHqbvtSUoPcMQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"ソフトウエアを作る仕事、すなわちプログラミングです。弊社で開発したＣＡＤ（イッツキャドマックスネオ）のカスタマイズを行います。\"},{\"id\":\"jno_1301064820861\",\"jobNo\":\"13010-64820861\",\"title\":\"【東京】組込ソフト開発（メンバー）\",\"company\":\"株式会社フェローシップ\",\"location\":\"東京都千代田区\",\"isRemote\":false,\"salary\":\"280,000円〜450,000円\",\"workTime\":\"フレックスタイム制 （1）07時00分〜22時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：124日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1301064820861&kJKbn=1&jGSHNo=0KfgZ7NhXej7YZautGeIrg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"製品開発ＥＧチームの立ち上げメンバーとして、組込ソフトエンジニアの募集です。\"},{\"id\":\"jno_1301064842661\",\"jobNo\":\"13010-64842661\",\"title\":\"エンタメ系オンラインサービス開発・バックエンド（契約）\",\"company\":\"アルファパートナーズ株式会社\",\"location\":\"東京都千代田区\",\"isRemote\":false,\"salary\":\"252,080円〜304,100円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1301064842661&kJKbn=1&jGSHNo=4r6UY%2BAtr4Bm24ezChebVg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"成長中のエンタメ系オンラインサービスの、バックエンドエンジニア。Ｒｕｂｙ ｏｎ Ｒａｉｌｓを用いたＡＰＩ設計・開発を中心に、システムのパフォーマンス改善や運用自動化をご担当いただき\"},{\"id\":\"jno_1304082832461\",\"jobNo\":\"13040-82832461\",\"title\":\"ＩＴ開発、運用保守、プロジェクトマネジメント\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都港区\",\"isRemote\":true,\"salary\":\"201,000円〜201,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1304082832461&kJKbn=1&jGSHNo=BDn1ngCEDZL4QYZEI%2BSHwQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"ＩＴ分野における技術支援事業を展開し、各企業の開発・運用プロジェクトへ参画、業務効率化と課題解決に貢献しています。保険・自動車業界を中心に実績を重ね、リモート勤務も併用した\"},{\"id\":\"jno_1307041054861\",\"jobNo\":\"13070-41054861\",\"title\":\"企画営業\",\"company\":\"株式会社キャリアジャパン\",\"location\":\"東京都渋谷区\",\"isRemote\":false,\"salary\":\"230,000円〜280,000円\",\"workTime\":\"（1）10時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：140日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1307041054861&kJKbn=1&jGSHNo=PD9MKphFFgHZ2p001P5ynQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"職業・人材紹介の企画営業 ・求人企業の開拓（今までの人脈をご利用下さい） ・求職者の発掘（スカウトや各媒体を使用）\"},{\"id\":\"jno_1308058870761\",\"jobNo\":\"13080-58870761\",\"title\":\"大手ＩＴ系企業内インフラ運用保守　／　在宅勤務\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都新宿区\",\"isRemote\":true,\"salary\":\"500,000円〜600,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308058870761&kJKbn=1&jGSHNo=4afRBeE%2FIrJ0hq%2B6sqpwPg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"大手ＩＴ企業のインフラ運用保守業務を担当いただきます。主な仕事内容は●情報システムインフラ（ＡＷＳ、Ｌｉｎｕｘサーバ等）の運用保守、●ドキュメント作成などです。\"},{\"id\":\"jno_1308058871861\",\"jobNo\":\"13080-58871861\",\"title\":\"Ｍｉｃｒｓｏｆｔ３６５管理者業務　／　在宅勤務\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都新宿区\",\"isRemote\":true,\"salary\":\"500,000円〜650,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308058871861&kJKbn=1&jGSHNo=4afRBeE%2FIrJ0hq%2B6sqpwPg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"大手企業内でＭｉｃｒｓｏｆｔ３６５についての既存運用から新運用への引継ぎ・巻き取り等のリーダー業務を担当いただきます。\"},{\"id\":\"jno_1308059213861\",\"jobNo\":\"13080-59213861\",\"title\":\"【公共事業】中小企業支援における事務局のお仕事＊一部在宅\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都新宿区\",\"isRemote\":true,\"salary\":\"270,000円〜300,000円\",\"workTime\":\"（1）09時00分〜17時30分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：124日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308059213861&kJKbn=1&jGSHNo=Bz9SgjIT3zw36PouSnDBrw%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"当社が受託した公共事業で、人材支援に関する事務局で事務のお仕事をお願いします。・事務局に入る問合せ対応（電話・メール）\"},{\"id\":\"jno_1401029703761\",\"jobNo\":\"14010-29703761\",\"title\":\"事務（在宅勤務）\",\"company\":\"土屋税務会計事務所　　土屋　陽一\",\"location\":\"神奈川県横浜市保土ケ谷区\",\"isRemote\":true,\"salary\":\"1,250円〜1,500円\",\"workTime\":\"（1）10時00分〜12時30分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1401029703761&kJKbn=1&jGSHNo=2D8B%2FRe%2BNjUFEvkoFMr7Zg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"所長税理士１名、パート２名。アットホームな雰囲気の事務所です。会計ソフトの入力、給与計算、文書スキャン作業、税理士補助業務\"},{\"id\":\"jno_1209009928361\",\"jobNo\":\"12090-09928361\",\"title\":\"某メガバンクの基盤構築・保守プロジェクトにおける社員支援\",\"company\":\"ＣＩＭキッコー株式会社\",\"location\":\"東京都品川区\",\"isRemote\":false,\"salary\":\"245,000円〜478,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：128日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1209009928361&kJKbn=1&jGSHNo=wTeTK48BZYSBcme9Jz3Aag%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"某メガバンクの基盤構築・保守プロジェクトにおける社員支援業務（ＰＭＯ）・案件推進に係るユーザー／ベンダーとの折衝、調整\"},{\"id\":\"jno_1304082675961\",\"jobNo\":\"13040-82675961\",\"title\":\"医療系システム開発エンジニア\",\"company\":\"株式会社　ＪａｐａｎＴｅｃｈｎｏｌｏｇｙ　本店\",\"location\":\"東京都港区\",\"isRemote\":false,\"salary\":\"449,000円〜449,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：121日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1304082675961&kJKbn=1&jGSHNo=zGsxHi1DqN5Durjs84359w%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"・薬局向けサービスのバックエンドプログラム改修・ＳＱＬ ＳｅｒｖｅｒからＰｏｓｔｇｒｅＳＱＬへのＤＢ移行に伴う詳細設計\"},{\"id\":\"jno_1307040890661\",\"jobNo\":\"13070-40890661\",\"title\":\"経理スタッフ（パート）\",\"company\":\"株式会社シーズ・ワン\",\"location\":\"東京都世田谷区\",\"isRemote\":false,\"salary\":\"1,230円〜1,400円\",\"workTime\":\"（1）09時30分〜18時30分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1307040890661&kJKbn=1&jGSHNo=G8rOtJx80R5XoZRBQETL8g%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"経理業務を通して、支援先の中小病院をサポートする仕事です。\"},{\"id\":\"jno_1308058785161\",\"jobNo\":\"13080-58785161\",\"title\":\"最新技術で上流を目指すリモートセキュリティ職募集案内\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":true,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308058785161&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■脆弱性診断自動化の設計補助■ＳＯＣ分析基盤の改善実装■ゼロトラスト認証連携の検証\"},{\"id\":\"jno_1308058795361\",\"jobNo\":\"13080-58795361\",\"title\":\"教育役も目指せるＳＲＥエンジニア上流キャリア採用枠\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":false,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"障害者\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308058795361&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■ Ｋｕｂｅｒｎｅｔｅｓ運用設計の改善主導■ Ｔｅｒｒａｆｏｒｍ構成の再利用設計■ 障害対応フローの高度化\"},{\"id\":\"jno_1308058800261\",\"jobNo\":\"13080-58800261\",\"title\":\"副業経験を生かせる安定基盤の信頼性工学ＳＲＥエンジニア\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":false,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308058800261&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■Ｋｕｂｅｒｎｅｔｅｓ運用と可用性改善の実装■Ｔｅｒｒａｆｏｒｍで環境構成をコード化■セキュリティ運用手順の改善\"},{\"id\":\"jno_1308058827561\",\"jobNo\":\"13080-58827561\",\"title\":\"残業少なめ心理安全性重視フルスタックエンジニア採用\",\"company\":\"株式会社　イデアルアーキテクツ\",\"location\":\"東京都新宿区\",\"isRemote\":false,\"salary\":\"266,666円〜500,000円\",\"workTime\":\"（1）10時00分〜19時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1308058827561&kJKbn=1&jGSHNo=8LZZaNfZxHjsq2CnQIoHnA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"■Ｎｅｘｔ．ｊｓとＴｙｐｅＳｃｒｉｐｔによる機能開発■サーバーレスＡＰＩの設計と改善■社内ツールの実装と保守\"},{\"id\":\"jno_1401029570061\",\"jobNo\":\"14010-29570061\",\"title\":\"ＩＴエンジニア（販社社内システム開発）\",\"company\":\"Ａｍｉｔｙ　Ｌｉｎｋ株式会社\",\"location\":\"神奈川県横浜市西区\",\"isRemote\":false,\"salary\":\"250,000円〜650,000円\",\"workTime\":\"交替制（シフト制） （1）09時00分〜17時30分\",\"holiday\":\"土日祝他 週休二日制：その他 年間休日数：124日\",\"employment\":\"障害者\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1401029570061&kJKbn=1&jGSHNo=KC8Aul%2FHKXxYEu1JeZ8pZQ%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"概要：エンドユーザーからの問い合わせに対する一次調査、およびエスカレーション業務をご担当いただきます。事象の切り分け：問い合わせ内容がシステム障害・不具合に該当す\"},{\"id\":\"jno_1804002929161\",\"jobNo\":\"18040-02929161\",\"title\":\"【正社員】ＳＥ・プログラマ、ネットワーク技術者／関東\",\"company\":\"株式会社　アートプロデザインワークス\",\"location\":\"神奈川県横浜市中区\",\"isRemote\":false,\"salary\":\"230,000円〜600,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：118日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1804002929161&kJKbn=1&jGSHNo=mSZ7Qno6yv0qiexjO1hg6g%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"◇コンピュータソフトの設計・開発 （Ｊａｖａ、．ｎｅｔ、Ｃ言語開発経験者優遇）\"},{\"id\":\"jno_1307041775161\",\"jobNo\":\"13070-41775161\",\"title\":\"（障）ヘルプデスク（事務・問い合わせ対応）\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都渋谷区\",\"isRemote\":true,\"salary\":\"1,230円〜1,230円\",\"workTime\":\"（1）10時00分〜17時00分\",\"holiday\":\"土日祝他 週休二日制：その他\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1307041775161&kJKbn=1&jGSHNo=upY5Ua8xr0UZWBC6wSN9nA%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"完全在宅にて、部活動の未来を支える部署でのヘルプデスクのお仕事です。・データ入力（専用システム、スプレッドシートなど）\"},{\"id\":\"jno_1415011756161\",\"jobNo\":\"14150-11756161\",\"title\":\"（障）一般事務／フルリモート勤務\",\"company\":\"図研テック株式会社\",\"location\":\"神奈川県横浜市港北区\",\"isRemote\":true,\"salary\":\"190,000円〜250,000円\",\"workTime\":\"（1）09時00分〜17時45分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：129日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1415011756161&kJKbn=1&jGSHNo=R5ZqSa8UMk3prRJHtOzJpA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"管理部門における総務・採用・経営企画の各業務を担当していただきます。\"},{\"id\":\"jno_1307040712561\",\"jobNo\":\"13070-40712561\",\"title\":\"（障）ソフトウェア開発技術者\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"東京都渋谷区\",\"isRemote\":false,\"salary\":\"656,000円〜750,000円\",\"workTime\":\"裁量労働制\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：125日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=1307040712561&kJKbn=1&jGSHNo=uYtrKSGVzBBZTaNBQiqwdg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"（主な業務内容）まずは事業ドメインやプロダクト理解を深めていただくために、事業責任者やプロダクトマネージャーと協力しながら、要件定義から\"},{\"id\":\"jno_2706018742961\",\"jobNo\":\"27060-18742961\",\"title\":\"【社会設計者】工場のムダをなくすＡＩ技術者\",\"company\":\"スキルシステムズ　株式会社\",\"location\":\"大阪府大阪市東淀川区\",\"isRemote\":false,\"salary\":\"260,000円〜333,333円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週 年間休日数：137日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-19\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2706018742961&kJKbn=1&jGSHNo=pnjpq%2Bc3VGsMwP6U0Z8INg%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"工場の生産工程を管理・最適化するソフトウェアの開発です。設備や生産ラインから集まるデータ（稼働状況・工程進捗・品質・在庫）を取り込み、工程の進み具合をリアルタイムに可視化。\"},{\"id\":\"jno_2601015980361\",\"jobNo\":\"26010-15980361\",\"title\":\"介護支援専門員（ケアマネジャー）（在宅勤務可）\",\"company\":\"株式会社　幸輝　　　　　　　　　　　　　　　　　　　　　　　\\n居宅支援事業所　華\",\"location\":\"京都府京都市北区\",\"isRemote\":true,\"salary\":\"240,000円〜265,000円\",\"workTime\":\"フレックスタイム制 （1）09時00分〜17時00分 （2）11時00分〜13時00分 （3）07時00分〜22時00分\",\"holiday\":\"他 週休二日制：その他 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2601015980361&kJKbn=1&jGSHNo=J7icskPglC0Ig5Uu7iteYA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"＊相談業 ＊居宅サービス計画の作成＊要介護等認定の申請代行 ＊給付管理業務\"},{\"id\":\"jno_2502002871361\",\"jobNo\":\"25020-02871361\",\"title\":\"組合書記【在宅勤務可・兼業可】\",\"company\":\"日軽パネルシステム労働組合\",\"location\":\"滋賀県長浜市\",\"isRemote\":true,\"salary\":\"2,000円〜2,000円\",\"workTime\":\"\",\"holiday\":\"土日祝 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2502002871361&kJKbn=1&jGSHNo=ls%2Bp7aekA%2F%2BkyvNXTnVTTg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"１ 総務・事務関連業務・組合員名簿や名義、連絡先などの情報管理（Ｅｘｃｅｌ等）・組合費の徴収状況の管理・記録\"},{\"id\":\"jno_2713008089661\",\"jobNo\":\"27130-08089661\",\"title\":\"オンラインフリースクール子ども支援スタッフ　【在宅勤務】\",\"company\":\"フォレストリンク\",\"location\":\"大阪府枚方市\",\"isRemote\":true,\"salary\":\"1,177円〜1,600円\",\"workTime\":\"交替制（シフト制） （1）08時50分〜12時30分 （2）12時50分〜15時10分 （3）16時30分〜18時30分\",\"holiday\":\"他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2713008089661&kJKbn=1&jGSHNo=AkUb1GuVrpcJI55f%2Bw6Bxg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"Ｍｉｎｅｃｒａｆｔを活用したオンラインフリースクール「フォレストリンク」にて、不登校・ひきこもりの子どもたちへのサポートスタッフとして活躍していただきます。勤務はすべてＤｉｓｃｏｒ\"},{\"id\":\"jno_2807003452361\",\"jobNo\":\"28070-03452361\",\"title\":\"情報処理エンジニア\",\"company\":\"コンベックス・アプリケーションズ　合同会社\",\"location\":\"大阪府大阪市北区\",\"isRemote\":false,\"salary\":\"240,000円〜320,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2807003452361&kJKbn=1&jGSHNo=FB%2Fh2%2FKwLeckLp4LNV5rtA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"＊ＡＩを利用した情報処理に関する研究及びソフトウェア 開発の補助 業務システムのリサーチ＆デベロップメント\"},{\"id\":\"jno_2804007507861\",\"jobNo\":\"28040-07507861\",\"title\":\"ＥＣ運営・ＡＩを使った業務効率化ツール開発\",\"company\":\"株式会社　ユアサ\",\"location\":\"兵庫県西宮市\",\"isRemote\":false,\"salary\":\"207,700円〜264,600円\",\"workTime\":\"（1）08時30分〜17時30分\",\"holiday\":\"土日 週休二日制：毎週 年間休日数：114日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2804007507861&kJKbn=1&jGSHNo=%2Bsx%2FG%2BEgwO8jNe0s1LFIyA%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"◎自社ＥＣの運営、Ａｍａｚｏｎや楽天などのモール運営＊ＩＴ、クラウドサービス、生成ＡＩ、ＢＰＯサービスを組み合わせた業務の効率化、自動化\"},{\"id\":\"jno_2804007524961\",\"jobNo\":\"28040-07524961\",\"title\":\"【在宅勤務】資料作成\",\"company\":\"シャインオンケアコンサルティング\",\"location\":\"兵庫県宝塚市\",\"isRemote\":true,\"salary\":\"1,200円〜1,200円\",\"workTime\":\"（1）10時00分〜14時00分\",\"holiday\":\"土日祝 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-18\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2804007524961&kJKbn=1&jGSHNo=VoZj0GQaTEEDXH6McpyrWg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"【在宅勤務限定となります】コンサルティング事業における資料作成補助、秘書業務等をしていただきます。\"},{\"id\":\"jno_2710006664661\",\"jobNo\":\"27100-06664661\",\"title\":\"海外ネット通販の新商品開拓・企画販売\",\"company\":\"株式会社　イマジニスト\",\"location\":\"和歌山県和歌山市\",\"isRemote\":false,\"salary\":\"194,990円〜194,990円\",\"workTime\":\"（1）08時10分〜17時10分\",\"holiday\":\"日他 週休二日制：毎週 年間休日数：117日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-16\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2710006664661&kJKbn=1&jGSHNo=mbVQyj97%2F44UtmU23hw6cw%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"ネットショップの運営業務を通してノウハウを習得していただいた後は、新商品の開拓・企画販売をお任せします。◇受注管理・ネット通販管理システムによる注文内容確認、商品の\"},{\"id\":\"jno_2803006678461\",\"jobNo\":\"28030-06678461\",\"title\":\"主任介護支援専門員\",\"company\":\"訪問介護ハウス　ブリオ\\n（合同会社　ＢＲＩＯ）\",\"location\":\"兵庫県尼崎市\",\"isRemote\":false,\"salary\":\"275,000円〜305,000円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝 週休二日制：毎週 年間休日数：120日\",\"employment\":\"一般\",\"jobType\":\"正社員\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2803006678461&kJKbn=1&jGSHNo=9J25zIMhgtc5g0Z2isTr4A%3D%3D&fullPart=1&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"訪問介護事業所での主任ケアマネジャー事業拡大にて新規居宅を立ち上げます。ケアプラン作成、担当者会議等。\"},{\"id\":\"jno_2904001790261\",\"jobNo\":\"29040-01790261\",\"title\":\"一般事務・営業事務\",\"company\":\"ユースタッフ合同会社\",\"location\":\"奈良県橿原市\",\"isRemote\":false,\"salary\":\"1,250円〜1,250円\",\"workTime\":\"（1）09時00分〜17時00分\",\"holiday\":\"土日祝 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2904001790261&kJKbn=1&jGSHNo=2gLWv1nCnzV3bqqxQxPPBg%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=0\",\"desc\":\"＊各種書類作成・整理＊請求書作成＊給与計算 等\"},{\"id\":\"jno_2706018849061\",\"jobNo\":\"27060-18849061\",\"title\":\"（障）経理事務等\",\"company\":\"有限会社　Ｍ－ｓｔｙｌｅ\",\"location\":\"大阪府豊中市\",\"isRemote\":false,\"salary\":\"1,200円〜1,200円\",\"workTime\":\"（1）09時00分〜18時00分\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2706018849061&kJKbn=1&jGSHNo=KKWIwt8xRFNLum4MN0J9LA%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"経理事務や人事労務等の補助をお願いします。・伝票入力・雇用保険や社会保険の手続き など\"},{\"id\":\"jno_2703018627861\",\"jobNo\":\"27030-18627861\",\"title\":\"障）営業リスト作成業務\",\"company\":\"（事業所の意向により公開していません）\",\"location\":\"大阪府大阪市西区\",\"isRemote\":false,\"salary\":\"1,230円〜1,230円\",\"workTime\":\"\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2703018627861&kJKbn=1&jGSHNo=HX8EojzP0T7phhymUHsKZA%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"＊弊社サービスとの親和性の高い企業様のリストアップや企業様に 送るメールの作成・送付作業等を行っていただきます。顧客デー タの入力をする作業となります。\"},{\"id\":\"jno_2703018629161\",\"jobNo\":\"27030-18629161\",\"title\":\"障）リサーチ業務、及びそれらに付随する業務\",\"company\":\"株式会社ＰＬＡＮーＢマーケティングパートナーズ\",\"location\":\"大阪府大阪市西区\",\"isRemote\":false,\"salary\":\"1,230円〜1,230円\",\"workTime\":\"\",\"holiday\":\"土日祝他 週休二日制：毎週\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-15\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2703018629161&kJKbn=1&jGSHNo=pWoWjAs1ZJ%2BTrlvXxyuIKw%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"＊パソコンを用いた調査、データ収集、入力業務 例：特定業界のニュース情報をリサーチ、社内システムへの データ入力、ＡＩがリサーチした内容の正誤チェック\"},{\"id\":\"jno_2804007577661\",\"jobNo\":\"28040-07577661\",\"title\":\"（障）在宅作業と施設外軽作業（就労支援Ａ型事業）\",\"company\":\"株式会社アドア【Ｗｏｎｄｅｒ】\",\"location\":\"兵庫県尼崎市\",\"isRemote\":true,\"salary\":\"1,250円〜1,250円\",\"workTime\":\"（1）09時00分〜14時30分\",\"holiday\":\"他 週休二日制：その他\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2804007577661&kJKbn=1&jGSHNo=tcaM3YwMvWConsENxiZzxQ%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"週２～３回事業所へ出勤作業残り在宅での事務作業・チラシ折り ・アクセサリー作り\"},{\"id\":\"jno_2804007578261\",\"jobNo\":\"28040-07578261\",\"title\":\"（障）在宅作業と施設外軽作業（就労支援Ａ型事業）\",\"company\":\"株式会社アドア【Ｗｏｎｄｅｒ】\",\"location\":\"兵庫県西宮市\",\"isRemote\":true,\"salary\":\"1,250円〜1,250円\",\"workTime\":\"（1）09時00分〜14時30分\",\"holiday\":\"他 週休二日制：その他\",\"employment\":\"一般\",\"jobType\":\"正社員以外\",\"dateAdded\":\"2026-06-22\",\"url\":\"https://www.hellowork.mhlw.go.jp/kensaku/GECA110010.do?screenId=GECA110010&action=dispDetailBtn&kJNo=2804007578261&kJKbn=1&jGSHNo=tcaM3YwMvWConsENxiZzxQ%3D%3D&fullPart=2&iNFTeikyoRiyoDtiID=&kSNo=&newArrived=2&tatZngy=1&shogaiKbn=1\",\"desc\":\"週２～３回事業所へ出勤作業残り在宅での事務作業・チラシ折り ・アクセサリー作り\"}]");
+    var f=JSON.parse("[]");
+    var n="\n      ※障害者雇用求人では、通勤勤務を載せています。ただ近畿だけです。また、在宅勤務の方は全国の勤務地を載せています。<br>\n      ※一般求人の方では、全国にある在宅勤務可能な求人だけを載せています。通勤が必要な求人は一般求人の方では載せておりません。\n    ";
+    if(!localStorage.getItem('eight_jobs')||localStorage.getItem('eight_jobs')==='[]'){localStorage.setItem('eight_jobs',JSON.stringify(j));}
+    if(!localStorage.getItem('eight_favs')){localStorage.setItem('eight_favs',JSON.stringify(f));}
+    if(!localStorage.getItem('eight_notice')){localStorage.setItem('eight_notice',n);}
+  }catch(e){}}());
+// ===== STATE =====
+let allJobs = [];
+let filteredJobs = [];
+let favorites = new Set();
+let showFavOnly = false;
+let currentJobId = null;
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', () => {
+  loadFromStorage();
+  updateTime();
+  applyFilters();
+});
+
+function updateTime() {
+  const now = new Date();
+  const s = (n) => String(n).padStart(2,'0');
+  const str = now.getFullYear() + '-' + s(now.getMonth()+1) + '-' + s(now.getDate()) +
+    ' ' + s(now.getHours()) + ':' + s(now.getMinutes()) + ':' + s(now.getSeconds());
+  document.getElementById('update-time').textContent = 'AI自動更新: ' + str;
+}
+
+// ===== STORAGE =====
+function loadFromStorage() {
+  try {
+    const jobs = localStorage.getItem('eight_jobs');
+    const favs = localStorage.getItem('eight_favs');
+    const notice = localStorage.getItem('eight_notice');
+    if (jobs) allJobs = JSON.parse(jobs);
+    if (favs) favorites = new Set(JSON.parse(favs));
+    if (notice) document.getElementById('notice-text').innerHTML = notice;
+  } catch(e) {}
+}
+function saveToStorage() {
+  try {
+    localStorage.setItem('eight_jobs', JSON.stringify(allJobs));
+    localStorage.setItem('eight_favs', JSON.stringify([...favorites]));
+    localStorage.setItem('eight_notice', document.getElementById('notice-text').innerHTML);
+  } catch(e) {}
+}
+
+// ===== NOTICE EDIT =====
+function toggleNoticeEdit() {
+  const el = document.getElementById('notice-text');
+  const btn = document.getElementById('btn-edit-notice');
+  if (el.contentEditable === 'true') {
+    el.contentEditable = 'false';
+    btn.textContent = '✏ 修正';
+    saveToStorage();
+    showToast('お知らせを保存しました');
+  } else {
+    el.contentEditable = 'true';
+    el.focus();
+    btn.textContent = '✔ 保存';
+  }
+}
+
+// ===== APPLY FILTERS & RENDER =====
+function applyFilters() {
+  const kw  = document.getElementById('keyword').value.trim().toLowerCase();
+  const loc = document.getElementById('filter-location').value;
+  const emp = document.getElementById('filter-employment').value;
+  const period = document.getElementById('filter-period').value;
+  const sort = document.getElementById('sort-order').value;
+  const now = new Date();
+
+  filteredJobs = allJobs.filter(j => {
+    if (showFavOnly && !favorites.has(j.id)) return false;
+    if (kw && ![(j.title||''), (j.company||''), (j.desc||'')].join(' ').toLowerCase().includes(kw)) return false;
+    if (loc) {
+      if (loc === '在宅') {
+        const remoteKw = /在宅|リモート|テレワーク/;
+        if (!j.isRemote && !remoteKw.test(j.location||'') && !remoteKw.test(j.title||'') && !remoteKw.test(j.desc||'')) return false;
+      } else {
+        if (!(j.location||'').includes(loc)) return false;
+      }
+    }
+    if (emp && !(j.employment||'').includes(emp)) return false;
+    if (period && j.dateAdded) {
+      const diff = (now - new Date(j.dateAdded)) / 86400000;
+      if (period === 'today' && diff > 1) return false;
+      if (period === '3days' && diff > 3) return false;
+      if (period === 'week' && diff > 7) return false;
+    }
+    return true;
+  });
+
+  filteredJobs.sort((a,b) => {
+    const da = new Date(a.dateAdded||0), db = new Date(b.dateAdded||0);
+    return sort === 'new' ? db - da : da - db;
+  });
+
+  document.getElementById('result-count').textContent = filteredJobs.length;
+  renderGrid();
+}
+
+// ===== RENDER =====
+function renderGrid() {
+  const grid = document.getElementById('job-grid');
+  if (filteredJobs.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>求人が見つかりませんでした。<br>HTMLファイルを読み込むか、検索条件を変更してください。</p></div>';
+    return;
+  }
+  grid.innerHTML = filteredJobs.map(j => `
+    <div class="job-card" onclick="openModal('${j.id}')">
+      <div class="card-tags">
+        <span class="tag ${j.jobType === '正社員' ? 'tag-type-full' : 'tag-type-part'}">${j.jobType||'正社員以外'}</span>
+        <span class="tag ${j.employment === '障害者' ? 'tag-disabled' : 'tag-general'}">${j.employment||'一般'}</span>
+        ${isNew(j) ? '<span class="tag tag-new">NEW</span>' : ''}
+        ${(j.isRemote || /在宅|リモート|テレワーク/.test((j.title||'')+(j.desc||'')+(j.location||''))) ? '<span class="tag tag-remote">在宅可</span>' : ''}
+        <span class="tag tag-real">リアル求人</span>
+      </div>
+      <button class="fav-btn ${favorites.has(j.id) ? 'active' : ''}" onclick="toggleFav(event,'${j.id}')">★</button>
+      <div class="card-title">${escHtml(j.title||'')}</div>
+      <div class="card-company">${escHtml(j.company||'')}</div>
+      <div class="card-location">${escHtml(j.location||'')}</div>
+      ${j.salary ? `<div class="card-salary">${escHtml(j.salary)}</div>` : ''}
+      ${j.workTime ? `<div class="card-worktime">${escHtml(j.workTime.slice(0,40))}</div>` : ''}
+      ${j.desc ? `<div class="card-desc">${escHtml(j.desc.slice(0,120))}</div>` : ''}
+      ${j.dateAdded ? `<div class="card-date">📋 受付年月日：${escHtml(j.dateAdded)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function isNew(j) {
+  if (!j.dateAdded) return false;
+  return (new Date() - new Date(j.dateAdded)) / 86400000 <= 7;
+}
+
+// ===== FAVORITES =====
+function toggleFav(e, id) {
+  e.stopPropagation();
+  if (favorites.has(id)) favorites.delete(id);
+  else favorites.add(id);
+  saveToStorage();
+  applyFilters();
+}
+function toggleFavFilter() {
+  showFavOnly = !showFavOnly;
+  document.getElementById('btn-fav-toggle').classList.toggle('active', showFavOnly);
+  applyFilters();
+}
+
+// ===== MODAL =====
+function openModal(id) {
+  const j = allJobs.find(x => x.id === id);
+  if (!j) return;
+  currentJobId = id;
+  document.getElementById('modal-tags').innerHTML = `
+    <span class="tag ${j.jobType === '正社員' ? 'tag-type-full' : 'tag-type-part'}">${j.jobType||'正社員以外'}</span>
+    <span class="tag ${j.employment === '障害者' ? 'tag-disabled' : 'tag-general'}">${j.employment||'一般'}</span>
+    ${isNew(j) ? '<span class="tag tag-new">NEW</span>' : ''}
+  `;
+  document.getElementById('modal-title').textContent = j.title||'';
+  document.getElementById('modal-company').textContent = j.company||'';
+  document.getElementById('modal-grid').innerHTML = `
+    <div class="modal-info-box"><div class="modal-info-label">📍 勤務地</div><div class="modal-info-val">${escHtml(j.location||'')}</div></div>
+    <div class="modal-info-box"><div class="modal-info-label">¥ 給与</div><div class="modal-info-val">${escHtml(j.salary||'')}</div></div>
+    <div class="modal-info-box"><div class="modal-info-label">🕐 勤務時間</div><div class="modal-info-val">${escHtml(j.workTime||'')}</div></div>
+    <div class="modal-info-box"><div class="modal-info-label">📅 休日</div><div class="modal-info-val">${escHtml(j.holiday||'')}</div></div>
+    <div class="modal-info-box"><div class="modal-info-label"># 求人番号</div><div class="modal-info-val">${escHtml(j.jobNo||'')}</div></div>
+    <div class="modal-info-box"><div class="modal-info-label">📋 受付年月日</div><div class="modal-info-val">${escHtml(j.dateAdded||'')}</div></div>
+  `;
+  document.getElementById('modal-desc').textContent = j.desc||'';
+  const applyBtn = document.getElementById('modal-apply-btn');
+  applyBtn.href = j.url || '#';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  currentJobId = null;
+}
+function closeModalIfOverlay(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+// ===== DELETE JOB =====
+function deleteCurrentJob() {
+  if (!currentJobId) return;
+  allJobs = allJobs.filter(j => j.id !== currentJobId);
+  favorites.delete(currentJobId);
+  saveToStorage();
+  closeModal();
+  applyFilters();
+  showToast('求人を削除しました');
+}
+
+// ===== CLEAR =====
+function showClearConfirm() { document.getElementById('confirm-clear').classList.add('open'); }
+function closeClearConfirm() { document.getElementById('confirm-clear').classList.remove('open'); }
+function clearAllJobs() {
+  allJobs.splice(0, allJobs.length);
+  favorites.clear();
+  localStorage.removeItem('eight_jobs');
+  localStorage.removeItem('eight_favs');
+  closeClearConfirm();
+  applyFilters();
+  showToast('全ての求人データを削除しました。再度ファイルを読み込めます。');
+}
+
+// ===== GOOGLE DRIVE SYNC =====
+function syncGDrive() {
+  loadFromStorage();
+  applyFilters();
+  showToast('ブラウザの保存データを最新に更新しました');
+}
+
+// ===== 重複チェック =====
+function makeStableId(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return 'j_' + Math.abs(hash).toString(36);
+}
+function isDuplicate(job) {
+  if (job.jobNo && allJobs.find(x => x.jobNo && x.jobNo === job.jobNo)) return true;
+  if (allJobs.find(x => x.id === job.id)) return true;
+  if (job.title && allJobs.find(x => x.title === job.title && x.company === job.company && x.location === job.location)) return true;
+  return false;
+}
+
+// ===== LOAD HTML FILE =====
+function loadHTMLFiles(event) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+  event.target.value = '';
+
+  const readFile = (file) => new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve({ html: e.target.result, name: file.name });
+    reader.readAsText(file, 'utf-8');
+  });
+
+  Promise.all(files.map(readFile)).then(results => {
+    let addedTotal = 0, skippedTotal = 0;
+    results.forEach(({ html, name }) => {
+      const newJobs = parseHalloworkHTML(html, name);
+      newJobs.forEach(j => {
+        if (!isDuplicate(j)) { allJobs.push(j); addedTotal++; }
+        else { skippedTotal++; }
+      });
+    });
+    saveToStorage();
+    updateTime();
+    applyFilters();
+    let msg;
+    if (addedTotal === 0 && skippedTotal > 0) {
+      msg = `取り込み済みのデータです。新しい求人はありませんでした。（重複 ${skippedTotal} 件）`;
+    } else if (skippedTotal > 0) {
+      msg = `${addedTotal} 件を新規追加しました。（重複 ${skippedTotal} 件はスキップ）`;
+    } else {
+      msg = `求人データを ${addedTotal} 件 読み込みました。`;
+    }
+    showToast(msg);
+  });
+}
+
+// ===== PARSE HELLOWORK HTML =====
+function parseHalloworkHTML(html, filename) {
+  const jobs = [];
+
+  // kyujinブロックの開始位置を全件検索
+  const startTag = /<table[^>]*class="[^"]*kyujin[^"]*"[^>]*>/gi;
+  const startMatches = [];
+  let sm;
+  while ((sm = startTag.exec(html)) !== null) {
+    // noborderは内部テーブルなのでスキップ
+    if (sm[0].includes('noborder')) continue;
+    startMatches.push(sm.index);
+  }
+
+  startMatches.forEach((startIdx, i) => {
+    // 次のkyujinブロックの手前まで、またはHTMLの末尾までを1ブロックとする
+    const endIdx = i + 1 < startMatches.length ? startMatches[i + 1] : html.length;
+    const block = html.slice(startIdx, endIdx);
+
+    try {
+      // 求人番号
+      const jobNoMatch = block.match(/name="kyujinCKBox"[^>]*value="(\d+)"/);
+      const rawNo = jobNoMatch ? jobNoMatch[1] : '';
+      let jobNo = rawNo;
+      if (rawNo.length >= 5) jobNo = rawNo.slice(0,5) + '-' + rawNo.slice(5);
+      const id = rawNo ? ('jno_' + rawNo) : makeStableId(block.slice(0, 200));
+
+      // 詳細URL
+      const urlMatch = block.match(/id="ID_dispDetailBtn"[^>]*href="([^"]+)"/);
+      const urlMatch2 = block.match(/href="([^"]+)"[^>]*id="ID_dispDetailBtn"/);
+      let jobUrl = (urlMatch ? urlMatch[1] : (urlMatch2 ? urlMatch2[1] : '')).replace(/&amp;/g, '&');
+
+      // 受付年月日
+      const dateMatch = block.match(/受付年月日[^：]*：(\d{4})年(\d{1,2})月(\d{1,2})日/);
+      let dateAdded = new Date().toISOString().split('T')[0];
+      if (dateMatch) {
+        dateAdded = dateMatch[1] + '-' + dateMatch[2].padStart(2,'0') + '-' + dateMatch[3].padStart(2,'0');
+      } else {
+        const fnDate = filename.match(/(\d{4})[.\-_](\d{1,2})[.\-_](\d{1,2})/);
+        if (fnDate) dateAdded = fnDate[1] + '-' + fnDate[2].padStart(2,'0') + '-' + fnDate[3].padStart(2,'0');
+      }
+
+      // 雇用形態
+      const kbnMatch = block.match(/kyujin_head_kbn[\s\S]{0,400}?<div>(正社員|パート|契約社員|派遣社員|嘱託|その他)<\/div>/);
+      const jobType = (kbnMatch && kbnMatch[1] === '正社員') ? '正社員' : '正社員以外';
+
+      // label_col〜data_col ペアを抽出
+      let title = '', company = '', workLocation = '', salary = '', workTime = '', holiday = '', desc = '';
+      const rowPat = /<td class="label_col">([\s\S]*?)<\/td>\s*<td class="data_col">([\s\S]*?)<\/td>/gi;
+      let row;
+      while ((row = rowPat.exec(block)) !== null) {
+        const lbl = row[1].replace(/<[^>]+>/g, '').trim();
+        const dataHtml = row[2];
+        const dat = dataHtml.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        if (lbl.includes('職種')) {
+          const fb = dataHtml.match(/class="fb">([^<]+)</);
+          title = fb ? fb[1].trim() : dat;
+        } else if (lbl.includes('仕事の内容')) {
+          desc = dat;
+        } else if (lbl.includes('事業所名')) {
+          company = dat;
+        } else if (lbl.includes('就業場所')) {
+          workLocation = dat;
+        } else if (lbl.includes('賃金')) {
+          const m = dat.match(/[\d,，]+円[〜～\-][\d,，]+円/);
+          salary = m ? m[0] : dat;
+        } else if (lbl.includes('就業時間')) {
+          workTime = dat;
+        } else if (lbl.includes('休日') || lbl.includes('休暇')) {
+          holiday = dat;
+        }
+      }
+      if (!title) title = '（職種不明）';
+
+      const employment = /障害|障がい/.test(block) ? '障害者' : '一般';
+      const isRemote = /在宅|リモート|テレワーク/.test(title + desc + workLocation);
+
+      jobs.push({ id, jobNo, title, company, location: workLocation, isRemote, salary, workTime, holiday, employment, jobType, dateAdded, url: jobUrl, desc });
+    } catch(e) {
+      console.warn('パースエラー:', e);
+    }
+  });
+
+  return jobs;
+}
+
+// ===== データを書き出す =====
+function exportHTML() {
+  if (allJobs.length === 0) {
+    showToast('書き出す求人データがありません。先にファイルを読み込んでください。');
+    return;
+  }
+  updateTime();
+  let exportDoc = document.documentElement.outerHTML;
+  const jobsJSON = JSON.stringify(allJobs);
+  const favsJSON = JSON.stringify([...favorites]);
+  const noticeHTML = document.getElementById('notice-text').innerHTML;
+  const injectScript = `\n  \n`;
+  // 既存の埋め込みを除去してから再注入
+  exportDoc = exportDoc.replace(/\(function\(\)\{try\{[\s\S]*?\}catch\(e\)\{\}\}\(\)\);?\s*/g, '');
+  exportDoc = exportDoc.replace('<script>\n// ===== STATE =====', '<script>' + injectScript + '// ===== STATE =====');
+  const blob = new Blob([exportDoc], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const now = new Date();
+  const d = now.getFullYear() + ('0'+(now.getMonth()+1)).slice(-2) + ('0'+now.getDate()).slice(-2);
+  a.download = 'index_' + d + '_' + allJobs.length + '件.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ ' + allJobs.length + ' 件の求人データを書き出しました。GitHubにアップロードしてください。');
+}
+
+// ===== UTILS =====
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+</script>
+
+
+</body></html>
