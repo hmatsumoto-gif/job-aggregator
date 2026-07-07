@@ -16696,13 +16696,25 @@ function updateTime() {
 // ===== STORAGE =====
 function loadFromStorage() {
   try {
-    const jobs = localStorage.getItem('eight_jobs');
-    const favs = localStorage.getItem('eight_favs');
+    const embEl = document.getElementById('__embedded_data__');
+    const embFavEl = document.getElementById('__embedded_favs__');
+    if (embEl && embEl.textContent.trim().length > 2) {
+      allJobs = JSON.parse(embEl.textContent);
+      favorites = new Set(JSON.parse(embFavEl ? embFavEl.textContent : '[]'));
+      try {
+        localStorage.setItem('eight_jobs', embEl.textContent);
+        if (embFavEl) localStorage.setItem('eight_favs', embFavEl.textContent);
+      } catch(e2) {}
+    } else {
+      const jobs = localStorage.getItem('eight_jobs');
+      const favs = localStorage.getItem('eight_favs');
+      if (jobs) allJobs = JSON.parse(jobs);
+      if (favs) favorites = new Set(JSON.parse(favs));
+    }
     const notice = localStorage.getItem('eight_notice');
-    if (jobs) allJobs = JSON.parse(jobs);
-    if (favs) favorites = new Set(JSON.parse(favs));
     if (notice) document.getElementById('notice-text').innerHTML = notice;
-  } catch(e) {}
+  } catch(e) { console.error('loadFromStorage error:', e); }
+}
 }
 function saveToStorage() {
   try {
