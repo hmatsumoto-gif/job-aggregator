@@ -17038,9 +17038,9 @@ function exportHTML() {
   const jobsJSON = JSON.stringify(allJobs);
   const favsJSON = JSON.stringify([...favorites]);
   let exportDoc = document.documentElement.outerHTML;
-  const marker1s = '<script id="__embedded_data__"';
-  const marker1e = '</script>';
-  const marker2s = '<script id="__embedded_favs__"';
+  const marker1s = '<scr' + 'ipt id="__embedded_data__"';
+  const marker1e = '<\/scr' + 'ipt>';
+  const marker2s = '<scr' + 'ipt id="__embedded_favs__"';
   while (exportDoc.includes(marker1s)) {
     const s = exportDoc.indexOf(marker1s);
     const e = exportDoc.indexOf(marker1e, s) + marker1e.length;
