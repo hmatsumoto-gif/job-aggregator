@@ -16715,7 +16715,6 @@ function loadFromStorage() {
     if (notice) document.getElementById('notice-text').innerHTML = notice;
   } catch(e) { console.error('loadFromStorage error:', e); }
 }
-}
 function saveToStorage() {
   try {
     localStorage.setItem('eight_jobs', JSON.stringify(allJobs));
