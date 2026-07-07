@@ -17024,14 +17024,25 @@ function exportHTML() {
     return;
   }
   updateTime();
-  let exportDoc = document.documentElement.outerHTML;
   const jobsJSON = JSON.stringify(allJobs);
   const favsJSON = JSON.stringify([...favorites]);
-  const noticeHTML = document.getElementById('notice-text').innerHTML;
-  const injectScript = `\n  \n`;
-  // 既存の埋め込みを除去してから再注入
-  exportDoc = exportDoc.replace(/\(function\(\)\{try\{[\s\S]*?\}catch\(e\)\{\}\}\(\)\);?\s*/g, '');
-  exportDoc = exportDoc.replace('<script>\n// ===== STATE =====', '<script>' + injectScript + '// ===== STATE =====');
+  let exportDoc = document.documentElement.outerHTML;
+  const marker1s = '<script id="__embedded_data__"';
+  const marker1e = '</script>';
+  const marker2s = '<script id="__embedded_favs__"';
+  while (exportDoc.includes(marker1s)) {
+    const s = exportDoc.indexOf(marker1s);
+    const e = exportDoc.indexOf(marker1e, s) + marker1e.length;
+    exportDoc = exportDoc.slice(0, s) + exportDoc.slice(e);
+  }
+  while (exportDoc.includes(marker2s)) {
+    const s = exportDoc.indexOf(marker2s);
+    const e = exportDoc.indexOf(marker1e, s) + marker1e.length;
+    exportDoc = exportDoc.slice(0, s) + exportDoc.slice(e);
+  }
+  const tag1 = '<scr' + 'ipt id="__embedded_data__" type="application/json">' + jobsJSON + '<\/scr' + 'ipt>';
+  const tag2 = '<scr' + 'ipt id="__embedded_favs__" type="application/json">' + favsJSON + '<\/scr' + 'ipt>';
+  exportDoc = exportDoc.replace('</body>', tag1 + '\n' + tag2 + '\n</body>');
   const blob = new Blob([exportDoc], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -17041,9 +17052,8 @@ function exportHTML() {
   a.download = 'index_' + d + '_' + allJobs.length + '件.html';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('✅ ' + allJobs.length + ' 件の求人データを書き出しました。GitHubにアップロードしてください。');
+  showToast('✅ ' + allJobs.length + ' 件のデータを書き出しました。GitHubにアップロードしてください。');
 }
-
 // ===== UTILS =====
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
