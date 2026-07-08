@@ -35027,6 +35027,7 @@ function exportHTML() {
   }
   const tag1 = '<scr' + 'ipt id="__embedded_data__" type="application/json">' + jobsJSON + '<\/scr' + 'ipt>';
   const tag2 = '<scr' + 'ipt id="__embedded_favs__" type="application/json">' + favsJSON + '<\/scr' + 'ipt>';
+  exportDoc = exportDoc.replace('</body>', tag1 + '\n' + tag2 + '\n</body>');
 
   const blob = new Blob([exportDoc], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
